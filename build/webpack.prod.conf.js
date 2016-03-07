@@ -15,6 +15,8 @@ var SOURCE_MAP = true
 
 config.devtool = SOURCE_MAP ? 'source-map' : false
 
+config.output.publicPath = './static'
+
 config.vue = config.vue || {}
 config.vue.loaders = config.vue.loaders || {}
 cssLoaders({
