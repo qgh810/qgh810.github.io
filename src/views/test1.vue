@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}12312312</h1>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 
@@ -17,3 +17,6 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+
+</style>

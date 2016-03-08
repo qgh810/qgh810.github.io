@@ -1,6 +1,11 @@
+import browser from './shared/js/browser'
+
+console.log(browser)
 
 var configRouter = function (router) {
   router.map({
+
+    // 404页面
     '*': {
       component: require('./views/no-found.vue')
     },
@@ -18,12 +23,17 @@ var configRouter = function (router) {
     '/test2': {
       component: require('./views/test2.vue')
     }
+
   })
 
-  // 重定向
   router.redirect({
     '/': '/index'
   })
+
+  // router.beforeEach(function (transition) {
+  //   console.log(router.redirect)
+  //   transition.next()
+  // })
 }
 
 module.exports = configRouter
