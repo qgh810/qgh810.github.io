@@ -11,11 +11,12 @@ config.output.chunkFilename = '[id].[chunkhash].js'
 
 // whether to generate source map for production files.
 // disabling this can speed up the build.
-var SOURCE_MAP = true
+// var SOURCE_MAP = true
+var SOURCE_MAP = false
 
 config.devtool = SOURCE_MAP ? 'source-map' : false
 
-config.output.publicPath = './static'
+config.output.publicPath = ''
 
 config.vue = config.vue || {}
 config.vue.loaders = config.vue.loaders || {}
@@ -45,7 +46,7 @@ config.plugins = (config.plugins || []).concat([
   // you can customize output by editing /index.html
   // see https://github.com/ampedandwired/html-webpack-plugin
   new HtmlWebpackPlugin({
-    filename: '../index.html',
+    filename: 'index.html',
     template: 'index.html',
     inject: true,
     minify: {

@@ -2,10 +2,10 @@ var path = require('path')
 
 module.exports = {
   entry: {
-    app: './src/main.js'
+    app: './src/app/main.js'
   },
   output: {
-    path: path.resolve(__dirname, '../dist/static'),
+    path: path.resolve(__dirname, '../dist'),
     publicPath: '/static/',
     filename: '[name].js'
   },
@@ -54,7 +54,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10,
-          name: '[name].[ext]?[hash:7]'
+          name: '[name]-[hash:7].[ext]?[hash:7]'
         }
       }
     ]
