@@ -29,5 +29,5 @@ export var heightauto = function () {
   var dom = this.el
   setTimeout(function () {
     dom.style.height = (window.innerHeight - dom.offsetTop) + 'px'
-  }, 0)
+  }, 400)
 }

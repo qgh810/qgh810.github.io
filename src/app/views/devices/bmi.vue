@@ -88,6 +88,7 @@
           </div>
         </div>
       </div>
+      <!-- <pre>{{test | json}}</pre> -->
       <div class="device-bluetooth-state" v-show="connectedDevices.isConnected"></div>
       <div class="device-main-data-box">
         <div class="weight-box">
@@ -103,7 +104,7 @@
           </div>
         </div>
         <div class="weight-target-box">
-          <div class="weight-targe" v-show="plan.target>0">
+          <div class="weight-targe">
             <span class="weight-target-text">
               {{$t('more_weight_messages.target_weight')}}
             </span>
@@ -120,8 +121,8 @@
             <div class="color-box"></div>
             <div class="number-box">
               <div class="bmi-number" :style="'color: '+bmiMsg.color">
-                <span>{{scaleData.bmi}}</span>
                 <div class="title">BMI</div>
+                <span>{{scaleData.bmi}}</span>
               </div>
             </div>
           </div>
@@ -138,8 +139,8 @@
             </div>
             <div class="number-box">
               <div class="bmi-number">
-                <span>{{plan.remaining}}</span>
                 <div class="title">{{$t('other.rest_time')}}</div>
+                <span>{{plan.remaining}}</span>
                 <div class="unit">{{$t('other.day')}}</div>
               </div>
             </div>
@@ -184,6 +185,11 @@
     },
     data () {
       return {
+        test: {
+          a: '',
+          b: '',
+          c: ''
+        },
         canShowMessage: true,
         canSaveData: false,
         showMoreDevices: false, // 选择设备浮层开关
@@ -195,6 +201,7 @@
           weight: 0,
           bmi: 0
         },
+        listenDeviceId: '',
         connectedDevices: {
           isConnected: false, // 当前是否已经连接设备
           deviceid: ''
@@ -202,7 +209,7 @@
         deviceList: [],
         userList: [],
         plan: {
-          target: 100,
+          target: '--',
           remaining: '--',
           percent: 1
         },
@@ -271,13 +278,19 @@
        */
       selectedDeviceName () {
         var self = this
-        var result = this.$t('device.bmi_scale')
+        var result = this.$t('placeholders.select_device')
         if (self.connectedDevices.deviceid.length > 0) {
           self.deviceList.map((item) => {
             item.selected = 0
             if (item.deviceid === self.connectedDevices.deviceid) {
               result = item.name
               item.selected = 1
+            }
+          })
+        } else {
+          self.deviceList.map((item) => {
+            if (item.selected === 1) {
+              result = item.name
             }
           })
         }
@@ -292,7 +305,11 @@
         return this.weightFormula(this.weightUnit, this.scaleData.weight)
       },
       toShowTargetWeight () {
-        return this.weightFormula(this.weightUnit, this.plan.target)
+        var result = '--'
+        if (this.plan.target > 0) {
+          result = this.weightFormula(this.weightUnit, this.plan.target)
+        }
+        return result
       },
       /**
        * 体重和目标体重的差值
@@ -345,6 +362,7 @@
     },
     ready () {
       this.initSVG() // 初始化svg
+      // alert(123)
     },
     methods: {
       /**
@@ -394,7 +412,7 @@
         var self = this
         api.connectDevice(device).then((r) => {
           if (r.status - 0 === 200) {
-            self.connectedDevices.isConnected = true
+            // self.connectedDevices.isConnected = true
             self.connectedDevices.name = device.name
             self.connectedDevices.deviceid = device.deviceid
           }
@@ -408,13 +426,44 @@
         var self = this
         SDK.on('onScanXDeviceResult', function (r) {
           if (!self.connectedDevices.isConnected && isBMI(r.data) && existsInList(self.deviceList, 'deviceid', r.deviceid)) {
-            self.connectDevice(r)
+            if (self.listenDeviceId.length > 0) {
+              if (r.deviceid === self.listenDeviceId) {
+                self.connectDevice(r)
+                setTimeout(() => {
+                  self.connectDevice(r)
+                }, 5000)
+              }
+            } else {
+              self.connectDevice(r)
+              setTimeout(() => {
+                self.connectDevice(r)
+              }, 5000)
+            }
           }
+        })
+        // 设备状态改变
+        SDK.on('onXDeviceStateChange', function (r) {
+          // alert(JSON.stringify(r))
+          // r.state  0是正在连接 1是已连接 2是断开 3是扫描中
+          if (r.state - 0 === 1) {
+            self.connectedDevices.isConnected = true
+          }
+          // self.connectedDevices.isConnected = true
         })
         SDK.on('onRecvXDeviceData', function (r) {
           if (r.deviceid === self.connectedDevices.deviceid) {
             var dataArr = decodeBase64(r.data)
-            self.scaleData.weight = parseInt('0x' + dataArr[5] + dataArr[6]) / 100
+            // self.test.a = dataArr
+            if (dataArr[0] === '0d' && dataArr[1] === 'ff') {
+              dataArr.shift()
+              dataArr.shift()
+            }
+            var coefficient = 10
+            if (dataArr[10] === '5a') {
+              coefficient = 100
+            }
+            // alert(dataArr)
+            self.scaleData.weight = parseInt('0x' + dataArr[5] + dataArr[6]) / coefficient
             self.scaleData.bmi = parseInt(self.scaleData.weight / ((self.selectedUser.height / 100) * (self.selectedUser.height / 100)) * 10) / 10
             if (dataArr[4] === '03' && self.scaleData.weight > 0) {
               self.canSaveData = true
@@ -439,10 +488,14 @@
        * @return {[type]}      [description]
        */
       selectDevice (device) {
+        this.showMoreDevices = false
         console.log(device)
         this.deviceList.map((item) => {
           item.selected = 0
         })
+        device.selected = 1
+        this.listenDeviceId = device.deviceid
+        this.selectedDeviceName = device.name
         this.connectDevice(device)
       },
       /**
@@ -451,6 +504,7 @@
        * @return {[type]}      [description]
        */
       selectUser (user) {
+        this.showMoreUsers = false
         this.userList.map((item) => {
           item.selected = 0
         })
@@ -572,8 +626,8 @@
               user.sex = item.sex
               user.height = item.height
               user._id = item._id
-              user.selected = (item._id === window.localStorage.getItem('selectedUserId'))
-              if (item._id === window.localStorage.getItem('selectedUserId')) {
+              user.selected = Boolean(item._id - 0 === window.localStorage.getItem('selectedUserId') - 0)
+              if (user.selected) {
                 hasSelectedUser = true
               }
               users.push(user)
@@ -690,20 +744,21 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .devices-bmi-scale
     .devices-body
       .details-box
-        padding 0
+        padding rem(20) 0 0
         .bmi-scale-details-box
           width 100%
-          height 7rem
           overflow hidden
           .people-icon
-            margin-left 2rem
-            width 4rem
-            height 100%
+            margin-left rem(120)
+            size rem(150) rem(290)
+            /*height 100%*/
             float left
-            background-size 100% 100%
+            background-size rem(150) rem(290)
             overflow hidden
           .people-icon.male-thin
             background-image url("../../assets/images/icons/male-thin.png")
@@ -723,23 +778,21 @@
             background-image url("../../assets/images/icons/female-more-obesity.png")
           .text
             height 100%
-            padding-left 6.5rem
-            padding-right 1rem
-            padding-top 1rem
+            padding rem(50) rem(50) 0 rem(280)
             box-sizing border-box
             text-align center
             .title
-              font-size 0.7rem
+              font-dpr 16px
             .number-box
               position relative
               text-align center
               .num
-                font-size 3rem
+                font-dpr 54px
                 display inline
                 position relative
                 white-space nowrap
                 .unit
-                  font-size 0.8rem
+                  font-dpr 16px
                   position absolute
                   bottom 0.2rem
 

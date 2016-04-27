@@ -1,11 +1,11 @@
 <template>
   <div class="hello-box">
     <div class="content">
-      <span class="line">———</span>
+      <!-- <span class="line">———</span> -->
       <span class="msg">
         {{msg}}
       </span>
-      <span class="line">———</span>
+      <!-- <span class="line">———</span> -->
     </div>
 
   </div>
@@ -23,11 +23,11 @@
 
 </script>
 <style lang="stylus">
-  /*@import '../assets/stylus/common'*/
+  @import '../assets/style/common'
+
   .hello-box
     width 90%
-    height 1.4rem
-    font-size 0.6rem
+    font-dpr 13px
     margin 0 auto
     color #fff
     .content

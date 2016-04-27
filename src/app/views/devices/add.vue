@@ -4,13 +4,13 @@
       :title="$t('title.add_device')">
     </header-nav>
     <hello :msg="$t('welcome.p2')"></hello>
-    <div class="devices-box" v-heightauto>
+    <div class="devices-box">
       <div class="device bmi" @touchend="addBmiScale">{{$t('device.bmi_scale')}}</div>
       <div class="device fat-scale" @touchend="addFatScale">{{$t('device.fat_scale')}}</div>
     </div>
     <modal class="add-device-modal" :show.sync="showBluetoothModal">
       <div slot="body">
-        <div class=modal-body-text-box>
+        <div class="tips">
           {{$t('messages.open_Bluetooth')}}
         </div>
       </div>

@@ -1,11 +1,11 @@
 <template>
 <div class="main-content history-box daydata-box">
   <div class="header-box1">
-    <!-- <div class="margin-top"></div> -->
+    <div class="margin-top"></div>
     <div class="content">
       <div class="title" @touchstart="showDatePicker=true">
         {{date}}
-        <span class="more">more</span>
+        <span class="more"></span>
       </div>
       <div
       class="left"
@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-  <div v-heightauto class="scrollDiv iosScrollBug">
+  <div class="scrollDiv iosScrollBug">
     <ul class="first_ul history_ul">
       <li v-for="record in records" class="date_msg">
         <ul @mousedown="openthis($index ,record.fat)" class="sed_ul">
@@ -122,30 +122,18 @@
         canload: true, // 是否允许加载
         hasDataDates: ['2016-3-25'],
         records: [
-          {
-            date: '2016-03-10 00:00:00',
-            weight: 2000,
-            unit: 'kg',
-            bmi: 23,
-            fat: 13,
-            moisture: 4,
-            bone: 5,
-            muscle: 456,
-            organs: 4,
-            internalage: 5
-          },
-          {
-            date: '2016-03-09 00:00:00',
-            weight: 2000,
-            unit: 'kg',
-            bmi: 23,
-            fat: 13,
-            moisture: 4,
-            bone: 5,
-            muscle: 456,
-            organs: 4,
-            internalage: 5
-          }
+          // {
+          //   date: '2016-03-10 00:00:00',
+          //   weight: 2000,
+          //   unit: 'kg',
+          //   bmi: 23,
+          //   fat: 13,
+          //   moisture: 4,
+          //   bone: 5,
+          //   muscle: 456,
+          //   organs: 4,
+          //   internalage: 5
+          // }
         ]
       }
     },
@@ -358,7 +346,7 @@
             background-size .8rem .8rem
     .first_ul.history_ul
       padding-top 0.1rem
-      padding-left 1rem
+      padding-left 0.5rem
       .sed_ul
         .time_msg
           .time_number

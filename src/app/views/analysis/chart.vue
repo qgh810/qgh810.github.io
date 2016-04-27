@@ -1,5 +1,5 @@
 <template>
-  <div class="main-content chart_page">
+  <div class="main-content chart_page" style="overflow: auto;">
     <header-nav
       :title="$t('title.chart')"
       :showright="false">
@@ -10,6 +10,7 @@
         <div id="monthbox" @touchstart.prevent.stop="selectedmonth('monthbox')" v-bind:data-name="'month'" class="datetype_box month selected">{{$t('chart.month')}}</div>
         <div id="yearbox" @touchstart.prevent.stop="selectedyear('yearbox')" v-bind:data-name="'year'" class="datetype_box year">{{$t('chart.year')}}</div>
       </div>
+      <!-- <pre>{{test | json}}</pre> -->
       <div class="sed_datetype"><i @touchstart.prevent.stop="prevdate" class="pointer_left">&lt;</i><span v-bind:firstdate="" v-bind:lastdate="" class="sed_datetext">{{showseddate}}</span><i @touchstart.prevent.stop="nextdate" class="pointer_right">&gt;</i></div>
       <div class="chart_box" :style="'height:'+(svgHeight+1.3)+'rem'">
         <!--y坐标轴-->
@@ -20,7 +21,7 @@
 
         -->
         <div class="chart_canvas" :style="'height:'+svgHeight+'rem'">
-          <svg id="svg1" v-bind:width="'100%'" v-bind:height="svgHeight+'rem'" class="svg">
+          <svg id="svg1" v-bind:width="'100%'" v-bind:height="svgPxHeight" class="svg">
             <defs>
               <linearGradient id="linearGradient-1" v-bind:x1="'0%'" v-bind:y1="'100%'" v-bind:x2="'100%'" v-bind:y2="'100%'">
                 <stop v-bind:stop-color="'#f4f4d3'" v-bind:offset="'0%'"></stop>
@@ -35,25 +36,24 @@
                 <stop v-bind:stop-color="'#ffffa4'" v-bind:stop-opacity="0.3" v-bind:offset="'100%'"></stop>
               </linearGradient>
             </defs>
-            <g id="Page_0" stroke="none" stroke-width="1" fill="none">
+            <g id="Page_0" stroke="none" stroke-width="5" fill="none">
               <path v-bind:d="acreages" v-bind:fill="'url(#linearGradient-2)'" v-bind:stroke-width="0" class="acreages"></path>
             </g>
-            <g id="Page_1" stroke="none" stroke-width="1" fill="none">
-              <path id="points_path" v-bind:d="d" v-bind:stroke="'url(#linearGradient-1)'" v-bind:stroke-width="3" v-bind:data-odd="'first'" class="path"></path>
+            <g id="Page_1" stroke="none" stroke-width="5" fill="none">
+              <path id="points_path" v-bind:d="d" v-bind:stroke="'url(#linearGradient-1)'" v-bind:stroke-width="5" v-bind:data-odd="'first'" class="path"></path>
             </g>
-            <g id="Page_2" v-bind:stroke="none" v-bind:stroke-width="1" v-bind:fill="'#ffffa4'">
-              <circle v-for="point in points" v-bind:cx="point.split(',')[0]-0" v-bind:cy="point.split(',')[1]-0" v-bind:r="5" v-bind:fill="'#ffffa4'" class="point_circle"></circle>
+            <g id="Page_2" v-bind:stroke="none" v-bind:stroke-width="5" v-bind:fill="'#ffffa4'">
+              <circle v-for="point in points" v-bind:cx="point.split(',')[0]-0" v-bind:cy="point.split(',')[1]-0" v-bind:r="6" v-bind:fill="'#ffffa4'" class="point_circle"></circle>
             </g>
           </svg>
           <div class="trigger" :style="'height:'+svgHeight+'rem'">
-            <div v-for="point in points" v-bind:style="'left:'+point.split(',')[0]+'px;top:'+point.split(',')[1]+'px'" @touchstart.prevent.stop="valueshow($index)" class="trigger_box opacity">
+            <div v-for="point in points" track-by="$index" v-bind:style="'left:'+point.split(',')[0]+'px;top:'+point.split(',')[1]+'px'" @touchstart.prevent.stop="valueshow($index)" class="trigger_box opacity">
               <div class="trigger_circle"></div>
               <div class="value_box"><span class="trigger_value_number"></span><span class="value_unit">{{unit}}</span></div>
             </div>
           </div>
         </div>
         <div class="coordinateX"><span v-for="coordinateX in coordinateXs" track-by="$index" v-bind:style="'width:'+100/coordinateXs.length+'%'" class="coordinateX_date">{{coordinateX}}</span>
-          <div class="explain">{{$t('more_weight_messages.weight')}}(kg)</div>
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
         <li id="fatbutton" @touchstart.prevent.stop="selectedfat('fatbutton')" v-bind:data-name="'fat'" class="date_type fat">
           <div class="divbotton faticon"><span>{{$t('more_weight_messages.fat')}}</span></div>
         </li>
-        <li id="bone" @touchstart.prevent.stop="selectedbone('bone')" v-bind:data-name="'fat'" class="date_type bone">
+        <li id="bone" @touchstart.prevent.stop="selectedbone('bone')" v-bind:data-name="'bone'" class="date_type bone">
           <div class="divbotton boneicon"><span>{{$t('more_weight_messages.bone')}}</span></div>
         </li>
         <li id="kcal" @touchstart.prevent.stop="selectedkcal('kcal')" v-bind:data-name="'kcal'" class="date_type kcal">
@@ -80,6 +80,12 @@
         <li id="muscle" @touchstart.prevent.stop="selectedmuscle('muscle')" v-bind:data-name="'muscle'" class="date_type muscle">
           <div class="divbotton muscleicon"><span>{{$t('more_weight_messages.muscle')}}</span></div>
         </li>
+        <li id="organs" @touchstart.prevent.stop="selectedorgans('organs')" v-bind:data-name="'organs'" class="date_type organs">
+          <div class="divbotton organsicon"><span>{{$t('more_weight_messages.organs')}}</span></div>
+        </li>
+        <li id="internalage" @touchstart.prevent.stop="selectedinternalage('internalage')" v-bind:data-name="'internalage'" class="date_type internalage">
+          <div class="divbotton internalageicon"><span>{{$t('more_weight_messages.internalage')}}</span></div>
+        </li>
       </ul>
     </div>
   </div>
@@ -88,43 +94,45 @@
 </template>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
 
   .chart_page
     width 100%
     height 100%
     overflow hidden
-    font-size 0.65rem
+    font-dpr 14px
     color #fff
     .date_switch
       width 100%
       position relative
       .fir_datetype
         width 90%
-        height 1.5rem
-        margin 0 auto
+        margin rem(20) auto 0
+        border 1px solid #fff
+        overflow hidden
+        border-radius rem(10)
+        clearfix()
         .datetype_box
-          margin-top 0.3rem
           float left
-          width 32.5%
-          height 1.2rem
-          line-height 1.2rem
+          width 33.33%
+          height rem(56)
+          line-height rem(56)
           background transparent
+          border-left 1px solid #FFF
           text-align center
-          border 1px solid #fff
           transition all ease 0.3s
+          box-sizing border-box
         .week
-          border-radius 0.25rem 0 0 0.25rem
-        .year
-          border-radius 0 0.25rem 0.25rem 0
+          border none
         .selected
           background #fff
           color #03b1c4
       .sed_datetype
         width auto
-        height 1rem
-        line-height 1rem
+        height rem(44)
+        line-height rem(44)
         position relative
-        margin 0.5rem auto
+        margin rem(18) auto
         text-align center
         i
           display inline-block
@@ -151,7 +159,7 @@
               display inline-block
               width 25px
               height 100%
-              font-size 12px
+              font-dpr 12px
               text-align center
               position relative
             i.line
@@ -179,16 +187,16 @@
               animation-delay 0s
             .path
               transition all ease 0.3s
-              stroke-dasharray 2000
+              stroke-dasharray 1000
               stroke-dashoffset 2000
-              animation dash 2s ease forwards
+              animation dash 1s ease forwards
               animation-iteration-count 1
               animation-delay 0.5s
             [data-odd="true"]
-              animation dash 2s ease forwards
+              animation dash 1s ease forwards
               animation-delay 0s
             [data-odd="false"]
-              animation dash1 2s ease forwards
+              animation dash1 1s ease forwards
               animation-delay 0s
             .point_circle
               ransition all ease 0.3s
@@ -202,27 +210,26 @@
             top 0
             .trigger_box
               transition all ease 0.4s
-              width 22px
-              height 22px
-              margin -11px 0 0 -11px
+              size rem(60)
+              height rem(60)
+              margin rem(-30) 0 0 rem(-30)
               position absolute
               .trigger_circle
                 position absolute
                 top 50%
                 left 50%
-                margin -8px 0 0 -8px
-                width 16px
-                height 16px
+                margin rem(-11) 0 0 rem(-11)
+                size rem(22)
                 border-radius 50%
                 background #ffffa4
                 box-shadow 0 0 4px 1px rgba(255,255,255,0.5)
               .value_box
                 width auto
-                height 15px
-                line-height 15px
-                padding 6px
+                height rem(30)
+                line-height rem(30)
+                padding 0.15rem
                 position absolute
-                top -35px
+                top -100%
                 left 50%
                 transform translate3d(-50%,0,0)
                 background #219d9b
@@ -231,16 +238,16 @@
                   content " "
                   width 0
                   height 0
-                  border-top 6px solid #219d9b
-                  border-left 6px solid transparent
-                  border-right 6px  solid transparent
+                  border-top 0.26rem solid #219d9b
+                  border-left 0.26rem solid transparent
+                  border-right 0.26rem  solid transparent
                   position absolute
                   left 50%
                   top 90%
-                  margin-left -6px
+                  margin-left -0.26rem
                 span
                  color #ffffa4
-                 font-size 15px
+                 font-dpr 15px
               &:first-child
                 .value_box
                   transform translate3d(0,0,0)
@@ -259,40 +266,41 @@
               opacity 0
         .coordinateX
           width 100%
-          height 1.2rem
+          height rem(64)
           border-top 1px solid #fff
           border-bottom 1px solid #fff
           .coordinateX_date
             display inline-block
-            height 1.2rem
-            line-height 1.2rem
+            line-height rem(64)
             text-align center
-            font-size 12px
+            font-dpr 12px
             width 20%
     .type_switch
       width 100%
       .type_switch_ul
+        clearfix()
         .date_type
-          display inline-block
-          width 24%
-          height 3.5rem
-          margin-left 7%
-          margin-top 0.3rem
-          border-radius 0.4rem
+          float left
+          width 33.33%
+          height rem(130)
+          margin-top rem(20)
           overflow hidden
           transition all ease 0.3s
+          font-size 0
+          text-align center
           .divbotton
-            width 100%
-            height 100%
-            background red
+            display inline-block
+            size rem(130)
             text-align center
-            background-size 1.5rem
+            background-size rem(70)
             background-position center 30%
             background-color transparent
             background-repeat no-repeat
+            border-radius rem(10)
             span
               position relative
-              top 2.2rem
+              top rem(90)
+              font-dpr 12px
           .weighticon
             background-image url("./chartassets/images/icon/tizhong.png")
           .bmiicon
@@ -307,9 +315,14 @@
             background-image url("./chartassets/images/icon/moisture.png")
           .muscleicon
             background-image url("./chartassets/images/icon/muscle.png")
+          .organsicon
+            background-image url("./chartassets/images/icon/organs.png")
+          .internalageicon
+            background-image url("./chartassets/images/icon/internalage.png")
         .selected
-          background #fff
-          color #41b8a1
+          .divbotton
+            background-color #fff
+            color #41b8a1
           .weighticon
             background-image url("./chartassets/images/icon/tizhong_selected.png")
           .bmiicon
@@ -324,10 +337,19 @@
             background-image url("./chartassets/images/icon/moisture_selected.png")
           .muscleicon
             background-image url("./chartassets/images/icon/muscle_selected.png")
+          .organsicon
+            background-image url("./chartassets/images/icon/organs_selected.png")
+          .internalageicon
+            background-image url("./chartassets/images/icon/internalage_selected.png")
     .loadingdiv
       .box
         background none
         padding-top 130px
+  pre
+    width 100%
+    height 10rem
+    overflow-y auto
+    background #000
   @keyframes dash {
 
     to {
@@ -363,7 +385,12 @@
     },
     data () {
       return {
-        svgHeight: 7, // 单位rem
+        test: {
+          a: '',
+          b: '',
+          c: []
+        },
+        svgHeight: 3.5, // 单位rem
         d: '', // 存放曲线的路径 是个字符串
         points: [], // 实际渲染的坐标点
         pointnum: ['0', '1', '0', '0', '0', 0], // 画布绘制的根据这里的数字绘制曲线  自动上下居中 自动计算差值 数值为0自动跳过
@@ -375,7 +402,11 @@
         coordinateYtexts: ['1kg', '7kg', '3kg', '4kg', '5kg'] // 纵坐标内容
       }
     },
-
+    computed: {
+      svgPxHeight () {
+        return this.svgHeight * window.lib.flexible.rem
+      }
+    },
     ready () {
       var self = this
       datetools.updatecoordinateXs.month(self) // 更新横坐标
@@ -435,25 +466,37 @@
       },
       selectedbone (id) {
         var self = this
-        self.unit = '？'
+        self.unit = 'kg'
         self.selectcommom(id)
         updataPointNum(self) // 获取数据，更新self.pointnum //debug
       },
       selectedkcal (id) {
         var self = this
-        self.unit = '？'
+        self.unit = 'kcal'
         self.selectcommom(id)
         updataPointNum(self) // 获取数据，更新self.pointnum //debug
       },
       selectedmoisture (id) {
         var self = this
-        self.unit = '？'
+        self.unit = '%'
         self.selectcommom(id)
         updataPointNum(self) // 获取数据，更新self.pointnum //debug
       },
       selectedmuscle (id) {
         var self = this
-        self.unit = '？'
+        self.unit = '%'
+        self.selectcommom(id)
+        updataPointNum(self) // 获取数据，更新self.pointnum //debug
+      },
+      selectedorgans (id) {
+        var self = this
+        self.unit = ''
+        self.selectcommom(id)
+        updataPointNum(self) // 获取数据，更新self.pointnum //debug
+      },
+      selectedinternalage (id) {
+        var self = this
+        self.unit = ''
         self.selectcommom(id)
         updataPointNum(self) // 获取数据，更新self.pointnum //debug
       },
@@ -547,6 +590,13 @@
         self.acreages = pointToD(self.pointnum).acreages // 重置数值  面
         function resetAnimation () {
           var points_path = document.getElementById('points_path')
+          var trigger_box = document.getElementsByClassName('trigger_box')
+          var value_box = document.getElementsByClassName('value_box')
+          self.showvalues = []
+          for (let i = 0; i < trigger_box.length; i++) {
+            trigger_box[i].style.opacity = 0
+            value_box[i].style.display = 'none'
+          }
           if (points_path.getAttribute('data-odd') === 'false') {
             points_path.setAttribute('data-odd', 'true')
           } else {
@@ -555,6 +605,7 @@
         }
         function pointToD (pointarr) {
           var svg_slope = 50 // 变化坡度大小 可以选择0到100之间的数字
+          var paddingTop = 80 + 50 * window.lib.flexible.dpr // 距上偏移量 不要超过svg的高度
           var newpointarr = []
           console.log(pointarr)
           for (let i = 0; i < pointarr.length; i++) {
@@ -589,26 +640,26 @@
           result.acreages = []
           for (let i = 0; i < newpointarr.length; i++) {
             if (newpointarr[i] > 0) {
-              result.path = 'M' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125)
-              result.acreages = 'M' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125)
-              result.points.push((windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125))
+              result.path = 'M' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop)
+              result.acreages = 'M' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop)
+              result.points.push((windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop))
               firstno0 = i
               break
             }
           }
           for (let i = firstno0 + 1; i < newpointarr.length; i++) {
             if (newpointarr[i] > 0) {
-              result.path += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125)
-              result.path += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125.001) // 弥补只有两个点的时候不显示线段的问题
+              result.path += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop)
+              result.path += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop + 0.001) // 弥补只有两个点的时候不显示线段的问题
 
-              result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125)
+              result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop)
               lastno0 = i
-              result.points.push((windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + 125))
+              result.points.push((windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * i) + ', ' + (-newpointarr[i] + paddingTop))
             }
           }
           result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * lastno0) + ',253'
           result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * firstno0) + ',253'
-          result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * firstno0) + ', ' + (-newpointarr[firstno0] + 125)
+          result.acreages += ' L' + (windowWidth / coordinateXlength / 2 + windowWidth / coordinateXlength * firstno0) + ', ' + (-newpointarr[firstno0] + paddingTop)
           return result
         }
       },

@@ -1,16 +1,18 @@
 {
-  "name": "mytestporject",
-  "description": "a vue.js porject",
-  "author": "guohui",
-  "private": true,
+  "name": "personal-homepage",
+  "description": "个人主页",
+  "author": "邱国辉 <530784837@qq.com>",
   "scripts": {
     "dev": "node build/dev-server.js",
     "build": "rimraf dist && mkdirp dist && ncp static dist/static && cross-env NODE_ENV=production webpack --progress --hide-modules --config build/webpack.prod.conf.js",
     "test": "karma start build/karma.conf.js --single-run"
   },
   "dependencies": {
+    "fastclick": "^1.0.6",
+    "han": "0.0.7",
     "vue": "^1.0.16",
     "vue-i18n": "^2.4.1",
+    "vue-router": "^0.7.11",
     "vuex": "^0.6.2"
   },
   "devDependencies": {
@@ -54,7 +56,6 @@
     "vue-hot-reload-api": "^1.2.0",
     "vue-html-loader": "^1.0.0",
     "vue-loader": "^8.1.3",
-    "vue-router": "^0.7.11",
     "vue-style-loader": "^1.0.0",
     "webpack": "^1.12.2",
     "webpack-dev-middleware": "^1.4.0",

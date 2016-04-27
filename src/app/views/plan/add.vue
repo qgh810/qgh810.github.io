@@ -1,66 +1,71 @@
 <template>
- <div class="plan-edit-add">
-   <header-nav
-     :title="$t('title.add_plan')">
-   </header-nav>
-   <div class="plan-box">
-    <div class="plan-contents-box">
-      <div class="plan-content name">
-        <span class="key">{{$t('plan.name')}}</span>
-        <span class="value">
-          <input type="text" :placeholder="$t('placeholders.plan_name_length')" v-model="plan.name">
-          </input>
-        </span>
-      </div>
-      <div class="plan-content target">
-        <span class="key">{{$t('plan.target_weight')}}</span>
-        <span class="value">
-          <input type="number" v-model="userInputWeight">
-          <i class="unit">{{weightUnit}}</i>
-        </span>
-      </div>
-      <div class="plan-content start-date">
-        <span class="key">{{$t('plan.start_date')}}</span>
-        <span class="value">{{plan.startDate}}</span>
-        <input type="date" class="value transparent" v-model="plan.startDate">
-      </div>
-      <div class="plan-content end-date">
-        <span class="key">{{$t('plan.end_date')}}</span>
-        <span class="value">{{plan.endDate}}</span>
-        <input type="date" class="value transparent" v-model="plan.endDate">
-      </div>
-    </div>
-    <div class="plan-contents-box">
-      <div class="plan-content prompt">
-        <span class="key">{{$t('plan.remind')}}</span>
-        <div
-        class="value"
-        :class="{'on':plan.promptOpen}"
-        @touchstart="promptEvent">
-          <div class="prompt-box">
-            <div class="prompt-background"></div>
-          </div>
-          <div class="prompt-button"></div>
+<div class="plan-edit-add">
+  <header-nav
+    :title="$t('title.add_plan')"
+    :righttext="$t('common.save')"
+    :showright="true"
+    @right-click="savePlan">
+  </header-nav>
+  <div class="plan-box">
+    <form name="plan">
+      <div class="plan-contents-box">
+        <div class="plan-content name">
+          <label class="key" for="name">{{$t('plan.name')}}</label>
+          <span class="value">
+            <input type="text" :placeholder="$t('placeholders.plan_name_length')" v-model="plan.name" name="name" maxlength="16">
+            </input>
+          </span>
+        </div>
+        <div class="plan-content target">
+          <span class="key">{{$t('plan.target_weight')}}</span>
+          <span class="value">
+            <input class="target-input" type="number" v-model="userInputWeight">
+            <i class="unit">{{weightUnit}}</i>
+          </span>
+        </div>
+        <div class="plan-content start-date">
+          <span class="key">{{$t('plan.start_date')}}</span>
+          <span class="value">{{plan.startDate}}</span>
+          <input type="date" class="value transparent" v-model="plan.startDate">
+        </div>
+        <div class="plan-content end-date">
+          <span class="key">{{$t('plan.end_date')}}</span>
+          <span class="value">{{plan.endDate}}</span>
+          <input type="date" class="value transparent" v-model="plan.endDate">
         </div>
       </div>
-    </div>
-    <div class="plan-contents-box" v-show="plan.promptOpen">
-      <div class="plan-content start-time">
-        <span class="key">{{$t('plan.start_time')}}</span>
-        <span class="value">{{plan.startTime}}</span>
-        <input type="time" class="value transparent" v-model="plan.startTime">
+      <div class="plan-contents-box">
+        <div class="plan-content prompt">
+          <span class="key">{{$t('plan.remind')}}</span>
+          <div
+          class="value"
+          :class="{'on':plan.promptOpen}"
+          @touchstart="promptEvent">
+            <div class="prompt-box">
+              <div class="prompt-background"></div>
+            </div>
+            <div class="prompt-button"></div>
+          </div>
+        </div>
       </div>
-      <div class="plan-content end-time">
-        <span class="key">{{$t('plan.end_time')}}</span>
-        <span class="value">{{plan.endTime}}</span>
-        <input type="time" class="value transparent" v-model="plan.endTime">
+      <div class="plan-contents-box" v-show="plan.promptOpen">
+        <div class="plan-content start-time">
+          <span class="key">{{$t('plan.start_time')}}</span>
+          <span class="value">{{plan.startTime}}</span>
+          <input type="time" class="value transparent" v-model="plan.startTime">
+        </div>
+        <div class="plan-content end-time">
+          <span class="key">{{$t('plan.end_time')}}</span>
+          <span class="value">{{plan.endTime}}</span>
+          <input type="time" class="value transparent" v-model="plan.endTime">
+        </div>
       </div>
-    </div>
-   </div>
-  <div class="save-button-box">
-    <button class="save-button" type="button" @touchend="savePlan">{{$t('common.save')}}</button>
+    </form>
   </div>
- </div>
+  <!-- <div class="save-button-box">
+    <button class="save-button" type="button" @touchend="savePlan">{{$t('common.save')}}</button>
+  </div> -->
+</div>
 </template>
 
 <script>
@@ -115,11 +120,11 @@
        */
       savePlan () {
         var self = this
-        console.log(JSON.stringify(self.plan))
+        self.plan.name = self.plan.name.trim()
         if (self.plan.name.length < 1 || self.plan.name.length > 16) {
           self.showMessage(self.$t('messages.plan_name_length'))
         } else if (!(self.plan.target - 0)) {
-          alert(self.plan.target - 0)
+          // alert(self.plan.target - 0)
           self.showMessage(self.$t('messages.target_weight'))
         } else if (!(new Date(self.plan.startDate) < new Date(self.plan.endDate))) {
           self.showMessage(self.$t('messages.end_date'))
@@ -205,39 +210,44 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .plan-edit-add
     width 100%
     height 100%
     .plan-box
-      margin-top 0.6rem
-      font-size 0.7rem
+      margin-top 0.2rem
+      font-dpr 16px
       .plan-contents-box
         border-bottom 1px solid #fff
-        padding-left 0.8rem
+        padding-left rem(30)
         box-sizing border-box
         .plan-content
-          height 2.5rem
-          line-height 2.5rem
+          height rem(94)
+          line-height rem(94)
           border-bottom 1px solid rgba(255,255,255,0.5)
           position relative
           .key
             display inline-block
-            width 4rem
+            text-overflow rem(250)
           .value
-            display inline-block
-            position absolute
-            right 1rem
-            width 8rem
+            absolute left rem(250) right rem(30) top
             height 100%
             text-align right
             overflow hidden
+            box-sizing border-box
             input[type="text"]
             input[type="number"]
               height 100%
-              width 5rem
+              width 100%
               background none
               border 0
               text-align right
+          input[type="date"]
+          input[type="time"]
+            right 0
+            left auto
+            width 100%
           .value.transparent
             opacity 0
           &:last-child
@@ -248,18 +258,22 @@
               width 100%
         .target
           .value
-            input
-              width 80%
+            right rem(40)
+            test-align right
+            input[type="number"].target-input
+              width 70%
+              line-height rem(94)
+              /*background red*/
+            /*.unit
+              absolute right top*/
         .prompt
           .value
             .prompt-box
-              position absolute
-              top 0.6rem
-              right 0.3rem
-              width 2rem
-              height 1.2rem
-              border-radius 1.2rem
-              border 0.1rem solid #fff
+              absolute top rem(15) right
+              width rem(100)
+              height rem(60)
+              border-radius rem(75)
+              border rem(3) solid #fff
               overflow hidden
               .prompt-background
                 position absolute
@@ -271,15 +285,12 @@
                 border-radius 1.2rem
                 transition left 0.2s ease
             .prompt-button
-              position absolute
-              top 0.69rem
-              right 0.4rem
-              width 1.2rem
-              height 1.2rem
-              border-radius 1.25rem
+              absolute top rem(18) right rem(6)
+              size rem(60)
+              border-radius 50%
               background #fff
-              box-shadow 0 0 0.5rem rgba(0,0,0,0.3)
-              transform translate3d(-0.79rem,0,0)
+              box-shadow 0 0 rem(10) rgba(0,0,0,0.3)
+              transform translate3d(rem(-40),0,0)
               transition transform 0.2s ease
           .value.on
             .prompt-box
@@ -289,19 +300,5 @@
               transform translate3d(0.05rem,0,0)
         &:first-child
           border-top 1px solid #fff
-  .save-button-box
-    position fixed
-    bottom 0
-    width 100%
-    height 4rem
-    padding 0.5rem
-    text-align center
-    box-sizing border-box
-    .save-button
-      width 85%
-      height 2rem
-      background #ffa96f
-      border 0.12rem solid #fff
-      border-radius 1rem
-      font-size 0.8rem
+
 </style>

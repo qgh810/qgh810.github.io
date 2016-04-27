@@ -53,6 +53,8 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .analysis-index
     .analysis-box
       margin-top 0.2rem
@@ -61,19 +63,19 @@
       padding-left 0.6rem
       .analysis-button
         position relative
-        height 2.5rem
-        line-height 2.5rem
+        height 1.5rem
+        line-height 1.5rem
         padding-left 0.2rem
-        font-size 0.8rem
+        font-dpr 16px
         border-bottom 1px solid rgba(255,255,255,0.4)
         &:first-child
           border-top 1px solid rgba(255,255,255,0.4)
         .more
           display block
-          width 0.8rem
-          height 0.8rem
+          width 0.4rem
+          height 0.4rem
           position absolute
-          right 0.8rem
+          right 0.4rem
           top 50%
           transform translate3d(0,-50%,0)
 </style>

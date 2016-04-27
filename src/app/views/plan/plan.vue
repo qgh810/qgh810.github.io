@@ -7,7 +7,7 @@
       :showright="true"
       @right-click="addPlan">
     </header-nav>
-    <div class="plan-box iosScrollBug" v-heightauto>
+    <div class="plan-box iosScrollBug">
       <div class="have-plan" v-if="havePlan">
         <ul>
           <li class="plan-button" v-for="plan in plans" @click.prevent.stop="editPlan(plan.id)">
@@ -43,14 +43,14 @@
     </div>
     <modal class="delete-modal" :show.sync="showDeleteModal">
       <div slot="body">
-        <div class=modal-body-text-box>
+        <div class="tips">
           {{$t('messages.del_plan')}}
         </div>
       </div>
       <div slot="footer">
         <div class="actions">
-          <div class="btn cancel-button" @touchend="cancel">{{$t('common.cancel')}}</div>
-          <div class="btn delete-button" @touchend="deletePlan">{{$t('common.del')}}</div>
+          <div class="btn cancel-button" @touchend.prevent.stop="cancel">{{$t('common.cancel')}}</div>
+          <div class="btn delete-button" @touchend.prevent.stop="deletePlan">{{$t('common.del')}}</div>
         </div>
       </div>
     </modal>
@@ -85,7 +85,7 @@
           //   id: 'absasdakl'
           // },
           // {
-          //   name: '计划112323',
+          //   name: '计划',
           //   time: '3',
           //   target: 60,
           //   id: 'absasdakl'
@@ -100,7 +100,6 @@
         return this.plans.length > 0
       }
     },
-
     route: {
       data () {
         var params = {
@@ -109,11 +108,9 @@
         this.getPlanList(params)
       }
     },
-
     ready () {
-      this.listenTouch()// 监听手势事件
+      this.listenTouch() // 监听手势事件
     },
-
     methods: {
       /**
        * 获取计划列表
@@ -134,6 +131,9 @@
               plans.push(plan)
             })
             self.plans = [].concat(plans)
+            setTimeout(() => {
+              self.listenTouch()// 监听手势事件
+            }, 300)
           }
         })
         /**
@@ -187,6 +187,7 @@
           if (r.status - 0 === 200) {
             self.showDeleteModal = false
             self.plans.$remove(self.toDeletePlan)
+            self.listenTouch()
           }
         })
       },
@@ -231,6 +232,8 @@
        */
       listenTouch () {
         var touchDoms = document.getElementsByClassName('touch')
+        var deleteBox = document.getElementsByClassName('delete-box')[0]
+        var deleteBoxWidth = deleteBox.clientWidth
         // touch.on(touchDoms, 'touchstart', function (ev) {
         //   ev.preventDefault()
         // })
@@ -247,7 +250,7 @@
           for (var i = 0; i < touchDoms.length; i++) {
             touchDoms[i].parentElement.style.webkitTransform = 'translate3d(0,0,0)'
           }
-          this.parentElement.style.webkitTransform = 'translate3d(-3rem,0,0)'
+          this.parentElement.style.webkitTransform = 'translate3d(-' + deleteBoxWidth + 'px,0,0)'
         })
       }
     }
@@ -255,12 +258,16 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .plan-index
     .plan-box
+      height 100%
+      width 100%
       margin-top 0.2rem
       padding-bottom 2.8rem
       box-sizing border-box
-      padding-left 0.6rem
+      padding-left rem(30)
       overflow-x hidden
       overflow-y auto
       .have-plan
@@ -268,10 +275,9 @@
         ul
           .plan-button
             position relative
-            height 3rem
-            line-height 3rem
-            padding-left 0.2rem
-            font-size 0.8rem
+            height rem(110)
+            padding-left rem(20)
+            font-dpr 16px
             border-bottom 1px solid rgba(255,255,255,0.4)
             &:first-child
               border-top 1px solid rgba(255,255,255,0.4)
@@ -280,42 +286,40 @@
               transition transform ease 0.2s
               transform translate3d(0,0,0)
               .plan-name
-                width 6rem
-                height 3rem
-                text-overflow ellipsis
-                overflow hidden
-                white-space nowrap
+                height rem(110)
+                line-height rem(110)
+                text-overflow rem(400)
               .plan-details-box
-                height 2rem
-                margin-top 0.5rem
+                height rem(100)
+                margin-top rem(16)
+                line-height 1.2
                 position absolute
-                right 2rem
+                right rem(100)
                 top 0
                 .details
-                  height 1rem
-                  line-height 1rem
+                  /*height 1rem*/
+                  /*line-height 1rem*/
                   .small-text
-                    font-size 0.6rem
+                    font-dpr 12px
                 .plan-day
                   color #fffda2
               .more
                 display block
-                width 0.8rem
-                height 0.8rem
+                size rem(50)
                 position absolute
-                right 0.8rem
+                right rem(30)
                 top 50%
                 transform translate3d(0,-50%,0)
               .delete-box
                 position absolute
                 left 100%
                 top 0
-                width 3rem
+                width rem(150)
                 height 100%
-                line-height 3rem
+                line-height rem(110)
                 text-align center
                 background #fd3830
-                font-size 0.7rem
+                font-dpr 14px
               .touch
                 width 100%
                 height 100%
@@ -326,38 +330,18 @@
               transform translate3d(-3rem,0,0)
       .no-plan
         position absolute
-        left 0
         width 60%
         left 50%
         top 20%
+        text-align center
         transform translate3d(-50%,0,0)
         .img
-          width 100%
+          margin 0 auto
+          size rem(375)
         .text
           width 100%
           text-align center
           p
             margin 0
-            font-size 0.85rem
-    .modal
-      background rgba(0,0,0,0.4)
-      .modal-header
-        h3
-          font-size 1rem
-          color #484848
-      .modal-body
-        .modal-body-text-box
-          width 100%
-          padding 0
-          overflow hidden
-          word-break break-all
-          text-align center
-          font-size 0.8rem
-      .modal-footer
-        .btn.cancel-button
-          color #999
-          font-size 0.8rem
-        .btn.delete-button
-          color #fd3830
-          font-size 0.8rem
+            font-dpr 18px
 </style>

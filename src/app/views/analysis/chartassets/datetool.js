@@ -88,7 +88,7 @@ module.exports = {
       var prevmonth = month - 1 > 0 ? month - 1 : month - 1 + 12
       var firmonth = day > 6 ? month : prevmonth
       var firday = day > 6 ? day - 6 : day - 6 + monthmaxday(year, month - 1)
-      self.showseddate = firmonth + '月' + firday + '日~' + month + '月' + day + '日'
+      self.showseddate = firmonth + '-' + firday + ' ~ ' + month + '-' + day
 
       var firstday = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 6)
       setSedDateTextAttr(firstday.getFullYear() + '-' + ((firstday.getMonth() + 1) > 9 ? (firstday.getMonth() + 1) : ('0' + (firstday.getMonth() + 1))) + '-' + (firstday.getDate() > 9 ? firstday.getDate() : ('0' + firstday.getDate())), today.getFullYear() + '-' + ((today.getMonth() + 1) > 9 ? (today.getMonth() + 1) : ('0' + (today.getMonth() + 1))) + '-' + (today.getDate() > 9 ? today.getDate() : ('0' + today.getDate())))
@@ -102,7 +102,7 @@ module.exports = {
         today = new Date()
       }
       var firstday = new Date(today.getTime() - 1000 * 60 * 60 * 24 * 29)
-      self.showseddate = (firstday.getMonth() - 0 + 1) + '月' + firstday.getDate() + '日~' + (today.getMonth() - 0 + 1) + '月' + today.getDate() + '日'
+      self.showseddate = (firstday.getMonth() - 0 + 1) + '-' + firstday.getDate() + ' ~ ' + (today.getMonth() - 0 + 1) + '-' + today.getDate()
 
       setSedDateTextAttr(firstday.getFullYear() + '-' + ((firstday.getMonth() + 1) > 9 ? (firstday.getMonth() + 1) : ('0' + (firstday.getMonth() + 1))) + '-' + (firstday.getDate() > 9 ? firstday.getDate() : ('0' + firstday.getDate())), today.getFullYear() + '-' + (((today.getMonth() + 1) > 9) ? (today.getMonth() + 1) : ('0' + (today.getMonth() + 1))) + '-' + ((today.getDate() > 9) ? today.getDate() : ('0' + today.getDate())))
     },
@@ -118,7 +118,7 @@ module.exports = {
       var month = today.getMonth() + 1
       var firstyear = month === 12 ? thisyear : thisyear - 1
       var firstmonth = month === 12 ? 1 : month + 1
-      self.showseddate = firstyear + '年' + firstmonth + '月~' + thisyear + '年' + month + '月'
+      self.showseddate = firstyear + '-' + firstmonth + ' ~ ' + thisyear + '-' + month
 
       setSedDateTextAttr(firstyear + '-' + (firstmonth > 9 ? firstmonth : ('0' + firstmonth)) + '-01', thisyear + '-' + (month > 9 ? month : ('0' + month)) + '-01')
     }

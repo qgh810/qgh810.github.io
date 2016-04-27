@@ -1,16 +1,17 @@
 <template>
   <div class="page-container">
+    <nav-header :navlist="nav"></nav-header>
     <router-view
     class="view"
     transition="view"
     transition-mode="out-in"></router-view>
-    <alert :header="$t('common.tips')" :body="message" :footer="$t('common.confirm')" @close="hideMessage"></alert>
-    <footer-nav></footer-nav>
+    <alert :content="message" :show="showAlert"></alert>
+    <!-- <div class="test" @touchend="reload"></div> -->
   </div>
 </template>
 
 <script>
-  import FooterNav from '../shared/components/footer-nav.vue'
+  import Header from '../shared/components/my-header.vue'
   import Alert from '../shared/components/alert.vue'
   import store from './store/index'
   import { hideMessage } from './store/actions/system'
@@ -18,15 +19,16 @@
   export default {
     // 全局用的组件
     components: {
-      'alert': Alert,
-      'footer-nav': FooterNav
+      'nav-header': Header,
+      'alert': Alert
     },
 
     store,
 
     vuex: {
       getters: {
-        message: ({ system }) => system.message
+        message: ({ system }) => system.message,
+        showAlert: ({ system }) => system.showAlert
       },
       actions: {
         hideMessage
@@ -34,7 +36,27 @@
     },
     data () {
       return {
-        debug: process.env.NODE_ENV !== 'production'
+        debug: process.env.NODE_ENV !== 'production',
+        nav: [
+          {
+            name: '111',
+            fn () {
+              alert(111)
+            }
+          },
+          {
+            name: '222',
+            fn () {
+              alert(222)
+            }
+          },
+          {
+            name: '333',
+            fn () {
+              alert(333)
+            }
+          }
+        ]
       }
     },
 
@@ -64,7 +86,7 @@
   .page-container
     width 100%
     height 100%
-    background no-repeat url('../shared/assets/images/bj.jpg') center center
+    background no-repeat url('../shared/assets/images/bj.jpg') fixed center top
     background-size 100% 100%
     position relative
     .view

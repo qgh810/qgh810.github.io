@@ -108,7 +108,7 @@ export default {
   },
 
   /**
-   * 连接蓝牙设备
+   * 假连接蓝牙设备
    * @return {[type]} [description]
    */
   connectDevice (device) {
@@ -123,13 +123,21 @@ export default {
   },
 
   /**
+   * 断开已连接的设备
+   * @return {[type]} [description]
+   */
+  disconnectDevice (device) {
+    return apiCore.disconnectDevice(device)
+  },
+
+  /**
    * 向设备发送数据
    * @param  {object} device 包含设备deviceid的对象
    * @param  {array} data   要发送给设备的数据
    * @return {[type]}        [description]
    */
   sendXDeviceData (device, data) {
-    return apiCore.connectDevice(device, data)
+    return apiCore.sendXDeviceData(device, data)
   },
   /** -------------------------------------------------
    * 记录部分
@@ -166,6 +174,15 @@ export default {
    */
   editRecord (param, query) {
     return apiCore.updateData(tables['RECORDS'], param, query)
+  },
+
+  /**
+   * 图表分析用的查询记录
+   * @param  {[type]} condition [description]
+   * @return {[type]}           [description]
+   */
+  queryRecords (condition) {
+    return apiCore.queryData(tables['RECORDS'], condition)
   },
 
   /** -------------------------------------------------

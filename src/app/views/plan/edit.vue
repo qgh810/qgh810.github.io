@@ -1,21 +1,24 @@
 <template>
  <div class="plan-edit-add">
    <header-nav
-     :title="$t('title.edit_plan')">
+     :title="$t('title.edit_plan')"
+     :righttext="$t('common.save')"
+     :showright="true"
+     @right-click="savePlan">
    </header-nav>
    <div class="plan-box">
     <div class="plan-contents-box">
       <div class="plan-content name">
         <span class="key">{{$t('plan.name')}}</span>
         <span class="value">
-          <input type="text" :placeholder="$t('placeholders.plan_name_length')" v-model="plan.name">
+          <input type="text" :placeholder="$t('placeholders.plan_name_length')" v-model="plan.name" maxlength="16">
           </input>
         </span>
       </div>
       <div class="plan-content target">
         <span class="key">{{$t('plan.target_weight')}}</span>
         <span class="value">
-          <input type="number" v-model="userInputWeight">
+          <input class="target-input" type="number" v-model="userInputWeight">
           <i class="unit">{{weightUnit}}</i>
         </span>
       </div>
@@ -57,9 +60,9 @@
       </div>
     </div>
    </div>
-  <div class="save-button-box">
+  <!-- <div class="save-button-box">
     <button class="save-button" type="button" @touchend="savePlan">{{$t('common.save')}}</button>
-  </div>
+  </div> -->
  </div>
 </template>
 
@@ -135,7 +138,6 @@
             } else {
               self.plan.promptOpen = false
             }
-            self.initPlanTime()
           } else {
             self.showMessage(r.msg)
           }
@@ -147,6 +149,7 @@
        */
       savePlan () {
         var self = this
+        self.plan.name = self.plan.name.trim()
         if (self.plan.name.length < 1 || self.plan.name.length > 16) {
           self.showMessage(self.$t('messages.plan_name_length'))
         } else if (!(self.plan.target - 0)) {

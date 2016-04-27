@@ -80,6 +80,17 @@ export default {
   },
 
   /**
+   * 连接设备
+   * @param  {Object} device 待连接设备
+   * @return {Promise}
+   */
+  disconnectDevice (device) {
+    return apiFactory('disconnectXDevice', {
+      deviceid: device.deviceid
+    })
+  },
+
+  /**
    * 向设备发送数据
    * @param  {object} device 包含设备deviceid的对象
    * @param  {array} data   要发送给设备的数据
@@ -88,6 +99,8 @@ export default {
   sendXDeviceData (device, data) {
     return apiFactory('sendXDeviceData', {
       deviceid: device.deviceid,
+      serviceUUID: device.serviceUUID,
+      charUUID: device.charUUID,
       data: encode(data)
     })
   },
@@ -176,6 +189,7 @@ export default {
       limit: condition.limit || 0,
       filter: condition.filter || [],
       query: condition.query || {},
+      group: condition.group || [],
       order: condition.order || {}
     })
   },

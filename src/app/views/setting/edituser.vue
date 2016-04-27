@@ -1,9 +1,11 @@
 <template>
   <div class="setting-edit-user">
     <header-nav
-      :title="$t('title.edit_user')">
+      :title="$t('title.edit_user')"
+      :righttext="$t('common.save')"
+      @right-click="saveInfo">
     </header-nav>
-    <div class="info-box" v-heightauto>
+    <div class="info-box">
       <div class="header-img-box" :class="user.sex" @touchstart="selectHeaderImg">
         <img v-show="user.headerImg" :src="user.headerImg" alt="" width="100%" height="100%" class="header-img">
       </div>
@@ -17,13 +19,13 @@
           <i class="icon name-icon"></i>
           <input class="name-input" type="text" name="name" v-model="user.name" :placeholder="$t('placeholders.user_name_length')">
         </div>
-        <div class="other-information birthday-box">
+        <div class="other-information birthday-box" @touchend="showBirthdayPicker">
           <i class="icon birthday-icon"></i>
           <span class="birthday-text">
             {{birthday.year}} - {{birthday.month}}
           </span>
           <i class="more"></i>
-          <input class="birthday-input" type="date" name="birthday" v-model="user.birthday">
+          <!-- <input class="birthday-input" type="date" name="birthday" v-model="user.birthday"> -->
         </div>
         <div class="other-information height-box" @touchend="showHeightPicker">
           <i class="icon height-icon"></i>
@@ -39,9 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="save-button-box">
+    <!-- <div class="save-button-box">
       <button class="save-button" type="button" @touchend="saveInfo">{{$t('common.save')}}</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -66,6 +68,9 @@
 
     data () {
       return {
+        selectingHeight: false,
+        selectingWeight: false,
+        selectingBirthday: false,
         user: {
           headerImg: '',
           sex: 'male',
@@ -124,6 +129,7 @@
        */
       saveInfo () {
         var self = this
+        self.user.name = self.user.name.trim()
         if (self.user.name.length < 1 || self.user.name.length > 16) {
           this.showMessage(self.$t('messages.user_name_length'))
         } else {
@@ -150,7 +156,12 @@
       onPhotoPickerResult () {
         var self = this
         SDK.on('onPhotoPickerResult', (r) => {
-          var imgPath = r.path.split('html/')[1]
+          var imgPath
+          if (/android/i.test(r.path)) {
+            imgPath = r.path
+          } else {
+            imgPath = r.path.split('html/')[1]
+          }
           self.user.headerImg = imgPath
         })
       },
@@ -174,6 +185,17 @@
             self.user.weight = Math.round(weight * 10) / 10
           })
         }
+        if (this.selectingBirthday) {
+          this.selectingBirthday = false
+          SDK.on('onPickerResult', (r) => {
+            var year = r.selectedData[0].replace(/[^\d]/g, '')
+            var month = r.selectedData[1].replace(/[^\d]/g, '')
+            month = month - 0 > 9 ? month : '0' + month
+            self.user.birthday = year + '-' + month + '-01'
+            // var birthday = r.selectedData.join('').replace(/[^\d.]/g, '') - 0
+            // self.user.birthday = Math.round(weight * 10) / 10
+          })
+        }
       },
 
       /**
@@ -187,6 +209,30 @@
         api.showPhotoPicker(params).then((r) => {
           if (r.status - 0 === 200) {
             self.onPhotoPickerResult()
+          }
+        })
+      },
+
+      /**
+       * 显示日期选择器
+       * @return {[type]} [description]
+       */
+      showBirthdayPicker () {
+        var self = this
+        var params = {}
+        params.title = '生日'
+        params.datasource = [[], []]
+        params.selectRow = [new Date(self.user.birthday).getFullYear() - 1900, new Date(self.user.birthday).getMonth()]
+        for (let i = 1900; i <= 2100; i++) {
+          params.datasource[0].push(i + '')
+        }
+        for (let i = 1; i <= 12; i++) {
+          params.datasource[1].push(i + '')
+        }
+        api.showPicker(params).then((r) => {
+          if (r.status - 0 === 200) {
+            self.selectingBirthday = true
+            this.onSelectPicker()
           }
         })
       },

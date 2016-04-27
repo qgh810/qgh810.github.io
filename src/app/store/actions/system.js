@@ -1,11 +1,14 @@
 import * as types from '../mutation-types'
 
-// 弹出错误提示
-export const showMessage = ({ dispatch }, messages, fn) => {
-  dispatch(types.RECEIVE_MESSAGE, messages, fn)
+// 弹出非中断式提示
+export const showMessage = ({ dispatch }, msg) => {
+  dispatch(types.RECEIVE_MESSAGE, msg)
+  window.setTimeout(() => {
+    dispatch(types.HIDE_ALERT)
+  }, 2000)
 }
 
-// 关闭错误提示
+// 移除通知信息
 export const hideMessage = ({ dispatch }) => {
   dispatch(types.REMOVE_MESSAGE)
 }

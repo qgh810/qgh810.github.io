@@ -22,8 +22,11 @@ export default {
   user_message: {
     name: 'Name', // 名称
     sex: 'Geschlecht', // 性别
-    no_users: '未选择用户', // 未选择用户
-    hasnot_users: '未选择用户' // 未选择用户
+    weight: 'Gewicht', // 体重
+    height: 'Größe', // 身高
+    birthday: 'Geburtsdatum', // 生日
+    no_users: 'kein Benutzer angewählt', // 未选择用户
+    hasnot_users: 'kein Benutzer angewählt' // 未选择用户
   },
 
   // 标题
@@ -38,13 +41,13 @@ export default {
     add_user: 'Benutzer hinzufügen', // 新增用户
     edit_user: 'Ändern Benutzer', // 编辑用户
     add_device: 'Gerät hinzufügen', // 添加设备
-    history: 'Bisherige Aufzeichnungen', // 历史记录
+    history: 'Datenanalyse', // 历史记录
     chart: 'Chartanalyse', // 图表分析
     data_analysis: 'Datenanalyse', // 数据分析
     date: 'Datum', // 日期
-    add_plan: '添加计划', // 添加计划
-    edit_plan: '编辑计划', // 编辑计划
-    setting_unit: '单位设置' // 单位设置
+    add_plan: 'Plan erstellen', // 添加计划
+    edit_plan: 'Plan bearbeiten', // 编辑计划
+    setting_unit: 'Geräte-Einstellung' // 单位设置
   },
 
   // 输入框提示
@@ -55,21 +58,21 @@ export default {
   },
 
   messages: {
-    setting_success: '设置成功', // 设置成功
+    setting_success: 'erfolgreich gespeichert', // 设置成功
     save_success: 'Speichern erfolgreich', // 保存成功
-    add_success: '添加成功', // 添加成功
-    over_weight: '重量超重', // 重量超重
-    low_power: '电池电量低', // 电池电量低
-    user_name_length: '用户名必须是2～6个字符', // 用户名必须是2～6个字符
+    add_success: 'Erfolgreich hinzugefügt', // 添加成功
+    over_weight: 'Übergewicht', // 重量超重
+    low_power: 'Batterie leer', // 电池电量低
+    user_name_length: 'Der Benutzername muss aus 1 bis 16 Buchstaben bestehen', // 用户名必须是1～16个字符
     open_Bluetooth: 'Aktivieren Sie Bluetooth und erlauben Sie "YiLai Scale", sich mit Ihrem Mobilgerät zu verbinden', // 打开蓝牙来允许“YiLai Scales”连接到配件
-    range_target_weight: '距离您的目标体重还需', // 距离您的目标体重还需
-    plan_name_length: '名称必须是2～8个字符', // 名称必须是2～8个字符
-    target_weight: '目标体重必须是大于0的数字', // 目标体重必须是大于0的数字
-    end_date: '结束日期必须大于开始日期', // 结束日期必须大于开始日期
+    range_target_weight: 'ur noch … kg zum Zielgewicht ', // 距离您的目标体重还需
+    plan_name_length: 'Der Name muss aus 1 bis 16 Buchstaben bestehen', // 名称必须是1～16个字符
+    target_weight: 'Zielgewicht muss größer als "0.0 kg" sein', // 目标体重必须是大于0的数字
+    end_date: 'Das Enddatum muss hinter dem Startdatum liegen', // 结束日期必须大于开始日期
     add_plan: 'Sie haben derzeit keinen Plan, fügen Sie nun einen hinzu!', // 您还没有计划,赶紧新增一个计划吧！
     del_plan: 'Sind Sie sicher, dass Sie Plan löschen möchten?', // 确定要删除这个计划吗？
-    del_user: '确定要删除', // 确定要删除
-    del_device: '确定要删除该设备吗？' // 确定要删除该设备吗？
+    del_user: 'Möchten Sie wirklich löschen?', // 确定要删除
+    del_device: 'Möchten Sie die Geräteverbindung trennen?' // 确定要删除该设备吗？
   },
 
   // 更多体重信息
@@ -79,12 +82,12 @@ export default {
     bone: 'Knochen', // 骨骼
     muscle: 'Muskel', // 肌肉
     kcal: 'Kalorie', // 卡路里
-    basalMetabolic: '基础代谢', // 基础代谢
-    internalage: '体内年龄', // 体内年龄
-    organs: '内脏脂肪', // 内脏脂肪
+    basalMetabolic: 'kcal', // 基础代谢
+    internalage: 'Körperalter', // 体内年龄
+    organs: 'Körperfett', // 内脏脂肪
     target_weight: 'Ziel', // 目标
     weight: 'weight', // 体重
-    year: '岁' // 岁 （单位）
+    year: 'Alter' // 岁 （单位）
   },
 
   // 星期
@@ -97,7 +100,8 @@ export default {
     bound: 'Verbinden', // 已绑定
     rename: 'Umbenennen', // 重命名
     unbind: 'Nicht verbunden', // 解绑
-    no_devices: '暂无设备', // 暂无设备
+    unbind_device: 'Nicht verbunden Gerät', // 解绑设备
+    no_devices: 'Gerät ist nicht verbunden', // 暂无设备
     rename_modal: {
       title: 'Umbenennen' // 重命名
     }
@@ -114,7 +118,7 @@ export default {
       name: 'Name' // 名称
     },
     date: 'Datum', // 日期
-    no_data: 'Keine Daten', // 暂无数据
+    no_data: 'Keine Daten', // 目前没有测量数据
     weight: 'Gewicht' // 体重
   },
 

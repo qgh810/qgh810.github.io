@@ -16,7 +16,7 @@ export const isBMI = (frame) => {
     (arr.slice(0, 4).join('').toLowerCase() === 'b400b101') && (arr.slice(8, 10).join('').toLowerCase() === 'ffff'),
 
     // 安卓判断2到6位
-    arr.slice(2, 6).join('').toLowerCase() === 'b400b018'
+    (arr.slice(2, 6).join('').toLowerCase() === 'b400b101') && (arr.slice(10, 12).join('').toLowerCase() === 'ffff')
   ]
 
   conditionArr.map((condition) => {
@@ -31,19 +31,41 @@ export const isBMI = (frame) => {
  * @param  {[type]} frame [description]
  * @return {[type]}       [description]
  */
-export const isFatScale = (frame, name) => {
+export const isFatScale = (frame, serviceUUIDs) => {
   var arr = decodeBase64(frame)
   var result = false
-
+  var serviceUUID = serviceUUIDs.join && serviceUUIDs.join('').replace(/\W/g, '') // 服务id
   // debug 条件目前是不正确的  等待解决
   // 满足一下条件其中一个即可认为該秤是脂肪秤
   var conditionArr = [
     // ios条件
     (arr.slice(0, 4).join('').toLowerCase() === 'b400b101') && (arr.slice(8, 10).join('').toLowerCase() === '01f4'),
+    // /fee7ffb0/i.test(serviceUUID),
+    /fee7/i.test(serviceUUID),
     // 安卓条件
-    arr.slice(2, 6).join('').toLowerCase() === 'b400b101',
+    (arr.slice(2, 6).join('').toLowerCase() === 'b400b101') && (arr.slice(10, 12).join('').toLowerCase() === '01f4'),
+    arr.slice(5, 7).join('').toLowerCase() === 'e7fe'
     // 公共条件
-    /weixin/i.test(name) // 判断是否含有weixin字眼 有的话说明是微信脂肪秤
+  ]
+  conditionArr.map((condition) => {
+    if (condition) {
+      result = true
+    }
+  })
+  return result
+}
+
+export const isWXFatScale = (frame, serviceUUIDs) => {
+  var arr = decodeBase64(frame)
+  var result = false
+  var serviceUUID = serviceUUIDs.join && serviceUUIDs.join('').replace(/\W/g, '') // 服务id
+  // debug 条件目前是不正确的  等待解决
+  // 满足一下条件其中一个即可认为該秤是脂肪秤
+  var conditionArr = [
+    // ios条件
+    /fee7/i.test(serviceUUID),
+    // 安卓条件
+    arr.slice(5, 7).join('').toLowerCase() === 'e7fe'
   ]
   conditionArr.map((condition) => {
     if (condition) {

@@ -7,7 +7,7 @@
       :showright="true"
       @right-click="addDevices">
     </header-nav>
-    <div class="devices-box" v-heightauto>
+    <div class="devices-box">
       <div class="device bmi" @touchstart="link('/devices/bmi')">{{$t('device.bmi_scale')}}</div>
       <div class="device fat-scale" @touchstart="link('/devices/fatScale')">{{$t('device.fat_scale')}}</div>
     </div>
@@ -28,6 +28,11 @@
         msg: '主页面'
       }
     },
+    route: {
+      data () {
+        // alert(window.localStorage.selectedUserId)
+      }
+    },
     ready () {
       if (!window.localStorage.selectedUserId || window.localStorage.selectedUserId === 'undefined') {
         this.setLocalSelectedUser()
@@ -38,6 +43,7 @@
       if (!window.localStorage.heightUnit || window.localStorage.heightUnit === 'undefined') {
         window.localStorage.heightUnit = 'cm'
       }
+      // window.localStorage.clear()
     },
     methods: {
       /**
@@ -71,18 +77,23 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .devices-index
     .devices-box
-      height 75%
+      height 85%
+      min-height 10rem
       padding 20%
       box-sizing border-box
       .device
         height 50%
-        padding-top 4.5rem
+        padding-top 2.2rem
         box-sizing border-box
-        background no-repeat center 0 /4rem
+        background-repeat no-repeat
+        background-position center top
+        background-size 2.2rem 2.2rem
         text-align center
-        font-size 0.8rem
+        font-dpr 18px
       .bmi
         background-image url('../../assets/images/devices/bmi.png')
 

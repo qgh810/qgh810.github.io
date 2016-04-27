@@ -6,7 +6,7 @@
       :showright="true"
       @right-click="addUser">
     </header-nav>
-    <div class="users-box iosScrollBug" v-heightauto>
+    <div class="users-box iosScrollBug">
       <ul v-show="userList.length">
         <li class="user-li" v-for="user in userList">
           <div class="user-box" @click.prevent.stop="editUser(user)">
@@ -24,13 +24,13 @@
           </div>
         </li>
       </ul>
-      <div v-show="!userList.length" class="noUsers" v-heightauto>
+      <div v-show="!userList.length" class="noUsers">
         {{$t('user_message.hasnot_users')}}
       </div>
     </div>
     <modal class="delete-modal" :show.sync="showDeleteModal">
       <div slot="body">
-        <div class=modal-body-text-box>
+        <div class="tips">
           {{$t('messages.del_user')}} {{toDeleteUser.name}}？
         </div>
       </div>
@@ -60,24 +60,24 @@
         showDeleteModal: false,
         toDeleteUser: {},
         userList: [
-          {
-            headerImg: '',
-            sex: 'female',
-            name: '444',
-            id: '123123123123'
-          },
-          {
-            headerImg: '',
-            sex: 'male',
-            name: '123',
-            id: '234234234234'
-          },
-          {
-            headerImg: '',
-            sex: 'female',
-            name: '1',
-            id: '5345345345'
-          }
+          // {
+          //   headerImg: '',
+          //   sex: 'female',
+          //   name: '444',
+          //   id: '123123123123'
+          // },
+          // {
+          //   headerImg: '',
+          //   sex: 'male',
+          //   name: '123',
+          //   id: '234234234234'
+          // },
+          // {
+          //   headerImg: '',
+          //   sex: 'female',
+          //   name: '1',
+          //   id: '5345345345'
+          // }
         ]
       }
     },
@@ -127,6 +127,9 @@
           if (r.status - 0 === 200) {
             self.showDeleteModal = false
             self.userList.$remove(self.toDeleteUser)
+            setTimeout(() => {
+              self.listenTouch()
+            }, 200)
           }
         })
       },
@@ -176,6 +179,8 @@
        */
       listenTouch () {
         var touchDoms = document.getElementsByClassName('touch')
+        var deleteBox = document.getElementsByClassName('delete-box')[0]
+        var deleteBoxWidth = deleteBox.clientWidth
         // touch.on(touchDoms, 'touchstart', function (ev) {
         //   ev.preventDefault()
         // })
@@ -194,7 +199,7 @@
             touchDoms[i].parentElement.style.webkitTransform = 'translate3d(0,0,0)'
           }
           if (document.getElementsByClassName('touch').length > 1) {
-            this.parentElement.style.webkitTransform = 'translate3d(-3rem,0,0)'
+            this.parentElement.style.webkitTransform = 'translate3d(-' + deleteBoxWidth + 'px,0,0)'
           }
         })
       }
@@ -203,18 +208,25 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .setting-user
     .users-box
       width 100%
-      background #fff
+      height 100%
+      background #F1F1F1
       color #000
       overflow-x hidden
       overflow-y auto
+      padding-top rem(20)
+      box-sizing border-box
+      padding-bottom 2rem
       ul
-        padding-top 1rem
+        background #FFF
+        overflow-x hidden
         li.user-li
           border-top 1px solid rgba(0,0,0,0.2)
-          height 3rem
+          height rem(160)
           width 100%
           .user-box
             width 100%
@@ -223,46 +235,42 @@
             transition transform 0.3s ease
             transform translate3d(0,0,0)
             .user-header-img
-              width 2.5rem
-              height 2.5rem
+              size rem(100)
               overflow hidden
               background rgba(0,0,0,0.2)
               position absolute
               top 50%
-              left 0.7rem
+              left rem(35)
               transform translate3d(0,-50%,0)
               border-radius 50%
+              border rem(3) solid #CCC
             .user-name
               height 100%
-              line-height 3rem
-              width 8rem
-              text-overflow ellipsis
-              overflow hidden
-              white-space nowrap
+              line-height rem(160)
+              text-overflow rem(300)
               position absolute
               top 0
-              left 4rem
-              font-size 0.7rem
+              left rem(170)
+              font-dpr 18px
             .more
               display block
-              width 1rem
-              height 1rem
+              size rem(50)
               background no-repeat url('../../../shared/assets/images/icons/graymore.png') center/100%
               position absolute
               top 50%
-              right 1rem
+              right rem(50)
               -webkit-transform translate3d(0, -50%, 0)
               transform translate3d(0, -50%, 0)
             .delete-box
               position absolute
               left 100%
               top 0
-              width 3rem
+              width rem(150)
               height 100%
-              line-height 3rem
+              line-height rem(160)
               text-align center
               background #fd3830
-              font-size 0.7rem
+              font-dpr 14px
               color #fff
             .touch
               width 100%
@@ -275,29 +283,9 @@
           &:last-child
             border-bottom 1px solid rgba(0,0,0,0.2)
       .noUsers
+        height 100%
         text-align center
         color #999
         padding 3rem
         box-sizing border-box
-  .modal
-    background rgba(0,0,0,0.4)
-    .modal-header
-      h3
-        font-size 1rem
-        color #484848
-    .modal-body
-      .modal-body-text-box
-        width 100%
-        padding 0
-        overflow hidden
-        word-break break-all
-        text-align center
-        font-size 0.8rem
-    .modal-footer
-      .btn.button1
-        color #999
-        font-size 0.8rem
-      .btn.button2
-        color #fd3830
-        font-size 0.8rem
 </style>

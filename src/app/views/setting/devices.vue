@@ -6,7 +6,8 @@
     :showright="true"
     @right-click="addDevice">
     </header-nav>
-    <div class="device-list-box iosScrollBug" v-heightauto>
+    <div class="device-list-box iosScrollBug">
+      <!-- <pre>{{devices | json}}</pre> -->
       <div class="device-ul" v-show="devices.length>0">
         <div class="device-li" v-for="device in devices">
           <div class="device-msg">
@@ -30,12 +31,18 @@
         </div>
       </div>
       <div class="noDevices" v-show="devices.length===0">
-        <span>{{$t('device.no_devices')}}</span>
+        <img class="noDevices-img" :src="'static/fat-scale.png'" alt="">
+        <p>
+          {{$t('device.no_devices')}}
+        </p>
       </div>
     </div>
     <modal class="delete-modal" :show.sync="showDeleteModal">
+      <div slot="header">
+        <h3>{{$t('device.unbind_device')}}</h3>
+      </div>
       <div slot="body">
-        <div class=modal-body-text-box>
+        <div class="tips">
           {{$t('messages.del_device')}}
         </div>
       </div>
@@ -61,7 +68,7 @@
       <div slot="footer">
         <div class="actions">
           <div class="btn cancel-button" @touchend="renameCancelButton">{{$t('common.cancel')}}</div>
-          <div class="btn delete-button" @touchend="renameDevice">{{$t('common.confirm')}}</div>
+          <div class="btn delete-button" :class="{'disabled': !canDelete}" @touchend="renameDevice">{{$t('common.confirm')}}</div>
         </div>
       </div>
     </modal>
@@ -93,11 +100,11 @@
           //   deviceid: 'ashdlkahlkfjsdbg234h23kj4',
           //   deviceType: 'bmi'
           // },
-          // {
-          //   name: 'fat2',
-          //   deviceid: 'ashdlkahlkfjsdbg234h23kj4',
-          //   deviceType: 'fat'
-          // },
+          {
+            name: 'fat2',
+            deviceid: 'ashdlkahlkfjsdbg234h23kj4',
+            deviceType: 'fat'
+          },
           {
             name: 'fat2',
             deviceid: 'ashdlkahlkfjsdbg234h23kj4',
@@ -118,11 +125,18 @@
       }
     },
 
+    computed: {
+      canDelete () {
+        return Boolean(this.renameModalText.length !== 0)
+      }
+    },
+
     route: {
       data () {
         this.getDeviceList()
       }
     },
+
     ready () {
       var self = this
       self.listenTouch()
@@ -138,16 +152,16 @@
             fatScaleList.map((itemFat) => {
               itemFat.deviceType = 'fat'
             })
-            api.getDeviceBMIList().then((r2) => {
-              if (r2.status - 0 === 200) {
-                bmiScaleList = r2.data.list
-                bmiScaleList.map((itemBMI) => {
-                  itemBMI.deviceType = 'bmi'
-                })
-                self.devices = fatScaleList.concat(bmiScaleList)
-              }
-            })
           }
+          api.getDeviceBMIList().then((r2) => {
+            if (r2.status - 0 === 200) {
+              bmiScaleList = r2.data.list
+              bmiScaleList.map((itemBMI) => {
+                itemBMI.deviceType = 'bmi'
+              })
+            }
+            self.devices = fatScaleList.concat(bmiScaleList)
+          })
         })
       },
       /**
@@ -166,6 +180,9 @@
             if (r.status - 0 === 200) {
               self.showDeleteModal = false
               self.devices.$remove(self.toDeleteDevice)
+              setTimeout(() => {
+                self.listenTouch()
+              }, 200)
             }
           })
         } else if (self.toDeleteDevice.deviceType === 'fat') {
@@ -173,6 +190,9 @@
             if (r.status - 0 === 200) {
               self.showDeleteModal = false
               self.devices.$remove(self.toDeleteDevice)
+              setTimeout(() => {
+                self.listenTouch()
+              }, 200)
             }
           })
         }
@@ -184,22 +204,24 @@
       renameDevice () {
         console.log('重命名')
         var self = this
-        var query = {
-          '_id': {'$in': [self.toRenameDevice._id]}
-        }
-        var params = {name: self.renameModalText}
-        if (self.toRenameDevice.deviceType === 'bmi') {
-          api.editBMI(params, query).then((r) => {
-            if (r.status - 0 === 200) {
-              success(self)
-            }
-          })
-        } else if (self.toRenameDevice.deviceType === 'fat') {
-          api.editFatScale(params).then((r) => {
-            if (r.status - 0 === 200) {
-              success(self)
-            }
-          })
+        if (self.renameModalText.length > 0) {
+          var query = {
+            '_id': {'$in': [self.toRenameDevice._id]}
+          }
+          var params = {name: self.renameModalText}
+          if (self.toRenameDevice.deviceType === 'bmi') {
+            api.editBMI(params, query).then((r) => {
+              if (r.status - 0 === 200) {
+                success(self)
+              }
+            })
+          } else if (self.toRenameDevice.deviceType === 'fat') {
+            api.editFatScale(params, query).then((r) => {
+              if (r.status - 0 === 200) {
+                success(self)
+              }
+            })
+          }
         }
         function success (self) {
           self.devices[self.devices.indexOf(self.toRenameDevice)].name = self.renameModalText
@@ -293,19 +315,23 @@
   }
 </script>
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .setting-device-list
     .device-list-box
       width 100%
-      margin-top 0.6rem
+      height 100%
+      padding-bottom 2rem
+      box-sizing border-box
+      margin-top 0.2rem
       overflow-y auto
       overflow-x hidden
       .device-ul
-        min-height 10px
-        padding-left 0.6rem
+        padding-left rem(30)
         border-top 1px solid rgba(255,255,255,0.5)
-        padding-bottom 4rem
+        overflow-x hidden
         .device-li
-          height 3rem
+          height rem(140)
           box-sizing border-box
           border-bottom 1px solid rgba(255,255,255,0.5)
           .device-msg
@@ -319,53 +345,40 @@
               left 0.2rem
               top 50%
               transform translate3d(0,-50%,0)
-              width 1.8rem
-              height 1.8rem
+              size rem(80)
             .device-text
               position absolute
-              left 2.8rem
-              top 0
-              height 100%
-              width 10rem
-
+              left rem(130)
+              top rem(20)
+              width rem(300)
               .device-name
-                width 80%
-                height 1.5rem
-                line-height 2rem
-                overflow hidden
-                font-size 0.8rem
-                text-overflow ellipsis
+                font-dpr 18px
+                text-overflow 100%
               .device-code
-                width 100%
-                height 1.5rem
-                padding-top 0.1rem
-                line-height 0.8rem
-                word-break break-all
-                font-size 0.7rem
+                font-dpr 12px
                 opacity 0.8
                 color #ccffff
-                overflow hidden
-                white-space nowrap
-                text-overflow ellipsis
+                text-overflow 100%
             .device-button-box
               position absolute
               left 100%
               height 100%
-              width 7rem
+              width rem(300)
               .device-button
-                padding 0 0.8rem
                 height 100%
-                line-height 3rem
+                line-height rem(140)
                 float left
                 text-align center
-                font-size 0.72rem
+                font-dpr 14px
                 white-space nowrap
                 box-sizing border-box
               .device-rename
-                width 4rem
+                width rem(150)
+                text-overflow rem(150)
                 background #0090ff
               .device-delete
-                width 3rem
+                width rem(150)
+                text-overflow rem(150)
                 background #fd3830
                 float right
                 box-shadow -1px 0 0 0 rgba(255,255,255,0.5)
@@ -377,47 +390,37 @@
               top 0
       .noDevices
         text-align center
-        padding 5rem 2rem
-    .modal
-      background rgba(0,0,0,0.4)
-      .modal-header
-        h3
-          font-size 1rem
-          color #484848
-      .modal-body
-        .modal-body-text-box
-          width 100%
-          padding 0
-          overflow hidden
-          word-break break-all
-          text-align center
-          font-size 0.8rem
-          .rename-box
-            width 90%
-            margin 0 auto
-            padding 0.2rem
-            position relative
-            .rename-input
-              width 100%
-              height 1.6rem
-              border 1px solid #c9c9c9
-              box-sizing border-box
-              padding 0 1rem
-              border-radius 1rem
-            .clear-text
-              width 2rem
-              height 2rem
-              background no-repeat url('../../../shared/assets/images/icons/icon_delete_gray.png') center /50%
-              position absolute
-              right 0.2rem
-              top 50%
-              transform translate3d(0,-50%,0)
-      .modal-footer
-        .btn.cancel-button
-          color #999
-          font-size 0.8rem
-        .btn.delete-button
-          color #fd3830
-          font-size 0.8rem
-
+        padding rem(200) 0
+        font-dpr 15px
+        .noDevices-img
+          margin-top 2rem
+          width 2.2rem
+          height 2.2rem
+          opacity 0.5
+  .rename-modal
+    // 重命名
+    .rename-box
+      width 90%
+      margin 0 auto
+      padding 0.2rem
+      position relative
+      .rename-input
+        width 100%
+        height rem(70)
+        border 1px solid #c9c9c9
+        box-sizing border-box
+        padding 0 rem(30)
+        border-radius rem(40)
+        font-dpr 14px
+      .clear-text
+        width rem(70)
+        height rem(70)
+        background no-repeat url('../../../shared/assets/images/icons/icon_delete_gray.png') center /50%
+        background-size rem(40)
+        position absolute
+        right rem(20)
+        top 50%
+        transform translate3d(0,-50%,0)
+  .modal .modal-footer .actions .btn.delete-button.disabled
+    color gray-light
 </style>

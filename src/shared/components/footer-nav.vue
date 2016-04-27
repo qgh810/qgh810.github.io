@@ -1,15 +1,15 @@
 <template>
-  <div class="footer-nav-box" v-show="selectednav!==0" transition="formBottom">
-    <div class="nav device" :class="{'selected':selectednav===1}" @touchstart="selectedNav(1)">
+  <div class="footer-nav-box" v-show="showNav" transition="formBottom">
+    <div class="nav device" :class="{'selected':$route.path==='/index'}" @touchend="selectedNav('/index')">
       <span>{{$t('title.device')}}</span>
     </div>
-    <div class="nav analysis" :class="{'selected':selectednav===2}" @touchstart="selectedNav(2)">
+    <div class="nav analysis" :class="{'selected':$route.path==='/analysis'}" @touchend="selectedNav('/analysis')">
       <span>{{$t('title.analysis')}}</span>
     </div>
-    <div class="nav plan" :class="{'selected':selectednav===3}" @touchstart="selectedNav(3)">
+    <div class="nav plan" :class="{'selected':$route.path==='/plan'}" @touchend="selectedNav('/plan')">
       <span>{{$t('title.plan')}}</span>
     </div>
-    <div class="nav setting" :class="{'selected':selectednav===4}" @touchstart="selectedNav(4)">
+    <div class="nav setting" :class="{'selected':$route.path==='/setting'}" @touchend="selectedNav('/setting')">
       <span>{{$t('title.setting')}}</span>
     </div>
   </div>
@@ -19,63 +19,48 @@
   module.exports = {
     data () {
       return {
-        selectednav: 0
+        changeNavCount: 0,
+        oldTime: 0,
+        path: this.$route.path
       }
     },
-
     computed: {
-      path () {
-        var result = 0
-        switch (this.$route.path) {
-          case '/index':
-            result = 1
-            break
-          case '/analysis':
-            result = 2
-            break
-          case '/plan':
-            result = 3
-            break
-          case '/setting':
-            result = 4
-            break
-          default:
-            result = 0
-            break
+      showNav () {
+        if (this.$route.path === '/index' || this.$route.path === '/analysis' || this.$route.path === '/plan' || this.$route.path === '/setting') {
+          return true
+        } else {
+          return false
         }
-        return result
       }
-    },
-
-    watch: {
-      path () {
-        this.selectednav = this.path
-      }
-    },
-
-    ready () {
-      this.selectednav = this.path
     },
     methods: {
-      selectedNav (num) {
-        var url = {
-          '1': '/index',
-          '2': '/analysis',
-          '3': '/plan',
-          '4': '/setting'
+      selectedNav (path) {
+        var downTime = new Date().getTime()
+        if (downTime - this.oldTime > 800) {
+          this.changeNavCount = 0
         }
-        this.$route.router.go(url[num])
+        this.oldTime = downTime
+        if (this.changeNavCount < 3) {
+          this.changeNavCount += 1
+          this.path = path
+          if (this.changeNavCount === 3) {
+            setTimeout(() => {
+              this.changeNavCount = 0
+            }, 800)
+          }
+          this.$route.router.replace(path)
+        }
       }
     }
   }
 </script>
 
 <style lang="stylus">
-  @import "../assets/style/base.styl";
+  @import "../assets/style/common"
 
   .footer-nav-box
     width 100%
-    height 2.8rem
+    height rem(100)
     background #fff
     position fixed
     bottom 0
@@ -86,12 +71,12 @@
       float left
       color #5c656e
       text-align center
-      font-size 0.5rem
-      padding-top 2rem
+      font-dpr 12px
+      padding-top rem(60)
       box-sizing border-box
       line-height 0.6rem
-      background-size 100% 7.8rem
-      background-position center -0.3rem
+      background-size rem(160) rem(293)
+      background-position center rem(-20)
     .device
       background-image url("../../app/assets/images/icons/footer-nav-device.png")
     .analysis
@@ -102,5 +87,5 @@
       background-image url("../../app/assets/images/icons/footer-nav-setting.png")
     .selected
       color #219d9b
-      background-position -0rem 2.95rem
+      background-position center rem(-190)
 </style>

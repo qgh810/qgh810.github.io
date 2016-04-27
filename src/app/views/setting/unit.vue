@@ -60,27 +60,29 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .setting-unit
     width 100%
     height 100%
     .unit-box
-      margin-top 0.65rem
-      font-size 0.7rem
+      margin-top 0.2rem
+      font-dpr 16px
       .title
         padding-left 0.6rem
-        height 2rem
-        line-height 2.8rem
-        font-size 0.75rem
+        height rem(110)
+        line-height rem(110)
+        font-dpr 16px
       .height-title
         margin-top 1.5rem
       .unit-contents-box
         border-top 1px solid #fff
         border-bottom 1px solid #fff
-        padding-left 0.8rem
+        padding-left rem(50)
         box-sizing border-box
         .unit-content
-          height 2.5rem
-          line-height 2.5rem
+          height rem(110)
+          line-height rem(110)
           border-bottom 1px solid rgba(255,255,255,0.5)
           position relative
           .key
@@ -88,8 +90,7 @@
             width 4rem
           .tick
             display block
-            width 1.2rem
-            height 1.2rem
+            size rem(36)
             background no-repeat url('../../../shared/assets/images/icons/tick.png') center /100%
             position absolute
             top 50%

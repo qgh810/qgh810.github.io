@@ -1,101 +1,71 @@
 <template>
-  <div v-show="body!==''" transition="modal" class="alert">
-    <div class="alert-box">
-      <div class="header-box">
-        <h3>{{header}}</h3>
-      </div>
-      <div class="body-box">
-        <p>{{body}}</p>
-      </div>
-      <div class="footer-box" @touchend.prevent.stop="close">
-        <span :style="'color:'+buttoncolor">{{footer}}</span>
-      </div>
+  <div class="alert">
+    <div v-show="show" class="alert-msg" transition="alert-msg" transition-mode="out-in">
+      <slot>{{content}}</slot>
     </div>
   </div>
 </template>
 
 <script>
+  import Vue from 'vue'
+  import { hideMessage } from '../../app/store/actions/system'
+
   module.exports = {
+    name: 'Alert',
+
     props: {
-      header: {
-        type: String,
-        default: '提示'
+      show: {
+        type: Boolean,
+        default: false
       },
-      body: {
+
+      content: {
         type: String,
         default: ''
-      },
-      footer: {
-        type: String,
-        default: '确定'
-      },
-      buttoncolor: {
-        type: String,
-        default: '#111'
       }
     },
 
-    ready: function () {
-      this.$dispatch('alert-created', this)
+    vuex: {
+      actions: {
+        hideMessage
+      }
     },
 
-    methods: {
-      close: function () {
-        this.show = false
-        this.$dispatch('close')
-      }
+    created () {
+      Vue.transition('alert-msg', {
+        afterLeave () {
+          this.hideMessage()
+        }
+      })
     }
   }
 </script>
 
 <style lang="stylus">
+  @import '../assets/style/common'
+
   .alert
-    position fixed
-    top 0
-    left 0
+    absolute left bottom rem(140)
     width 100%
-    height 100%
-    background rgba(0,0,0,0.5)
-    z-index 1000
-    color #999
-    .alert-box
-      width 70%
-      heihgt auto
-      position absolute
-      left 50%
-      top 50%
-      transform translate3d(-50%,-50%,0)
-      text-align center
-      background #fff
-      border-radius 3%
-      box-sizing border-box
-      box-shadow 0.2rem 0.2rem 0.2rem 0.1rem rgba(0,0,0,0.3)
-      .header-box
-        height 1.6rem
-        margin 0.5rem 0
-        h3
-          height 1.6rem
-          line-height 1.6rem
-          margin 0
-          color #222
-      .body-box
-        max-height 12rem
-        overflow auto
-        margin 0.5rem 0
-        color #333
-        p
-          margin 0
-          padding 0
-          padding 0 0.5rem
-          font-size 0.7rem
-      .footer-box
-        border-top 1px solid #ccc
-        height 2rem
-        line-height 2rem
-        font-size 0.9rem
-        span
-          background transparent
-          border 0
-          height 100%
-          width 100%
+    text-align center
+
+    .alert-msg
+      position relative
+      display inline-block
+      margin 0 auto
+      max-width 80%
+      background rgba(0, 0, 0, .3)
+      border-radius rem(20)
+      color #FFF
+      font-dpr 16px
+      padding rem(30) rem(50)
+
+    // 吐司
+  .alert-msg
+    transition transform .2s ease, opacity .2s ease
+
+  .alert-msg-enter
+  .alert-msg-leave
+    opacity 0
+    transform translate3d(0, rem(10), 0)
 </style>

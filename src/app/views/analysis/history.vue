@@ -6,7 +6,7 @@
     :showright="true"
     @right-click="showDatePicker=true">
   </header-nav>
-  <div v-scrollbottom="scrollbottom" v-heightauto class="scrollDiv iosScrollBug">
+  <div v-scrollbottom="scrollbottom" class="scrollDiv iosScrollBug">
     <ul class="first_ul history_ul">
       <li v-for="record in records" class="date_msg">
         <span v-if="istoday(record.oldDate)" class="data_number">{{$t('common.today')}}</span>
@@ -87,7 +87,7 @@
                   {{$t('more_weight_messages.basalMetabolic')}}
                   </div>
                   <div class="more-information-number">
-                    {{record.basalMetabolic}}
+                    {{record.basalMetabolic}}kcal
                   </div>
                 </div>
               </div>
@@ -96,7 +96,12 @@
         </ul>
       </li>
     </ul>
-    <div v-if="records.length==0" class="nodata">{{$t('record.no_data')}}</div>
+    <div v-if="records.length==0" class="nodata">
+      <div class="img">
+        <img src="../../assets/images/icons/no-record.png" width="100%">
+      </div>
+      <p>{{$t('record.no_data')}}</p>
+    </div>
   </div>
   <date-picker :show.sync="showDatePicker" :hasdatadates="hasDataDates" @day-click="selectDate" @monthchange="monthchange" transition="scale"></date-picker>
 </div>
@@ -135,38 +140,39 @@
           //   bone: 5,
           //   muscle: 456,
           //   organs: 4,
+          //   internalage: 5,
+          //   basalMetabolic: 0
+          // },
+          // {
+          //   date: '2016-03-24 00:00:00',
+          //   month: '7',
+          //   day: '13',
+          //   oldDate: 1458805687387,
+          //   showWeight: 2000,
+          //   unit: 'kg',
+          //   bmi: 13,
+          //   fat: 13,
+          //   moisture: 4,
+          //   bone: 5,
+          //   muscle: 456,
+          //   organs: 4,
           //   internalage: 5
           // },
-          {
-            date: '2016-03-24 00:00:00',
-            month: '7',
-            day: '13',
-            oldDate: 1458805687387,
-            showWeight: 2000,
-            unit: 'kg',
-            bmi: 13,
-            fat: 13,
-            moisture: 4,
-            bone: 5,
-            muscle: 456,
-            organs: 4,
-            internalage: 5
-          },
-          {
-            date: '2016-03-23 12:00:00',
-            oldDate: '2016-03-23 12:00:00',
-            month: '7',
-            day: '13',
-            showWeight: 2000,
-            unit: 'kg',
-            bmi: 23,
-            fat: -1,
-            moisture: 4,
-            bone: 5,
-            muscle: 456,
-            organs: 4,
-            internalage: 5
-          }
+          // {
+          //   date: '2016-03-23 12:00:00',
+          //   oldDate: '2016-03-23 12:00:00',
+          //   month: '7',
+          //   day: '13',
+          //   showWeight: 2000,
+          //   unit: 'kg',
+          //   bmi: 23,
+          //   fat: -1,
+          //   moisture: 4,
+          //   bone: 5,
+          //   muscle: 456,
+          //   organs: 4,
+          //   internalage: 5
+          // }
         ]
       }
     },
@@ -398,37 +404,39 @@
 
 </script>
 
-
 <style lang="stylus">
-  /*@import '../../../shared/assets/stylus/common'*/
+  @import '../../../shared/assets/style/common'
+
   .history-box
     color #fff
     .scrollDiv
       height 100%
-      padding-bottom 3.7rem
+      height 100%
+      padding-bottom 2rem
       box-sizing border-box
       overflow-x hidden
       overflow-y auto
     ul.first_ul
       padding-top 0.5rem
-      padding-left 3rem
+      padding-left 1.5rem
       box-sizing border-box
       li.date_msg
         clearfix()
         width:100%
-        line-height 3rem
+        /*line-height 3rem*/
         border-bottom 1px solid #d6d6d6
         position relative
         transition all ease 0.5s
         &:first-child
-           border-top 1px solid #d6d6d6
-        //overflow hidden
+          border-top 1px solid #d6d6d6
+          //overflow hidden
         .data_number
-          width 3rem
+          width 1.5rem
+          text-overflow 1.5rem
           height 1rem
           line-height 1rem
           padding-right 0.2rem
-          font-size 0.65rem
+          font-dpr 14px
           text-align right
           position absolute
           left 0
@@ -438,66 +446,61 @@
           li.time_msg
             position relative
             .time_number
-              width 3rem
-              line-height 3rem
-              padding-right 10px
-              font-size 0.8rem
+              width 1.5rem
+              line-height 1.5rem
+              padding-right rem(10)
+              font-dpr 16px
               text-align right
               position absolute
-              left -3rem
+              left -1.5rem
               box-sizing border-box
             .thistime_information
               overflow hidden
-              height 3rem //点击变成auto
+              height 1.5rem //点击变成auto
               box-sizing border-box
               clearfix()
               .base-information
                 width 45%
-                padding-top 0.5rem
+                padding-top 0.25rem
                 float left
                 .base-information-title
                 .base-information-number
                   width 100%
-                  line-height 1rem
-                  padding 0 10px
-                  font-size 0.6rem
+                  padding 0 rem(10)
+                  font-dpr 12px
                   white-space nowrap
                   text-overflow ellipsis
                   overflow hidden
                 .base-information-number
-                  font-size 0.8rem
+                  font-dpr 15px
               .more
-                display inline-block
-                height 1rem
+                absolute right .5rem top .5rem
+                size .5rem
                 line-height 1rem
-                width 1rem
-                position absolute
-                right 1rem
-                top 1.1rem
                 transition all ease 0.3s
                 transform rotate(0deg) //点击变成90deg
                 text-align center
                 color #dadada
-                font-size 0.7rem
+                font-dpr 14px
               .more-information-box
                 float left
-                padding-bottom 0.5rem
+                padding-bottom 0.25rem
                 .more-information
                   width 45%
-                  padding-top 0.5rem
+                  padding-top 0.25rem
                   float left
                   .more-information-title
                   .more-information-number
                     width 100%
-                    line-height 1rem
-                    padding 0 10px
-                    font-size 0.6rem
+                    /*line-height 1rem*/
+                    padding 0 .2rem
+                    font-dpr 12px
                   .more-information-number
-                    font-size 0.8rem
+                    font-dpr 16px
                 span
                   width 100%
                   line-height 2rem
-                  font-size 0.6rem
+                  font-dpr 12px
                   position relative
                   box-sizing border-box
                   .type
@@ -505,13 +508,13 @@
                     position absolute
                     right 2rem
                     background #ff8314
-                    font-size 0.6rem
+                    font-dpr 12px
                     color #fff
                     height 1rem
                     line-height 1rem
                     margin-top 0.4rem
-                    padding 0 15px
-                    border-radius 100px
+                    padding 0 rem(15)
+                    border-radius rem(100)
                 .foodRecommend
                   color #ff8314
             [data-open="1"]
@@ -520,6 +523,11 @@
                  transform rotate(-90deg)
     .nodata
       text-align center
-      font-size 0.8rem
-      opacity 0.8
+      font-dpr 18px
+      .img
+        width 7rem
+        height 7rem
+        margin 1rem auto 0
+    .data-picker
+      margin-top 2rem
 </style>

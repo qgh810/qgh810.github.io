@@ -6,15 +6,15 @@
     </header-nav>
     <div class="setting-box">
       <ul>
-        <li class="setting-button" @touchend="link('/setting/user')">
+        <li class="setting-button" @touchend.prevent.stop="link('/setting/user')">
           <span>{{$t('setting.user')}}</span>
           <i class="more"></i>
         </li>
-        <li class="setting-button" @touchend="link('/setting/devices')">
+        <li class="setting-button" @touchend.prevent.stop="link('/setting/devices')">
           <span>{{$t('setting.device')}}</span>
           <i class="more"></i>
         </li>
-        <li class="setting-button" @touchend="link('/setting/unit')">
+        <li class="setting-button" @touchend.prevent.stop="link('/setting/unit')">
           <span>{{$t('setting.unit')}}</span>
           <i class="more"></i>
         </li>
@@ -49,28 +49,29 @@
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
+
   .setting-index
     .setting-box
       margin-top 0.2rem
       box-sizing border-box
-      padding-left 0.6rem
+      padding-left rem(30)
       border-top 1px solid #fff
       border-bottom 1px solid #fff
       .setting-button
         position relative
-        height 2.5rem
-        line-height 2.5rem
-        padding-left 0.2rem
-        font-size 0.8rem
+        height rem(100)
+        line-height rem(100)
+        padding-left rem(20)
+        font-dpr 16px
         border-bottom 1px solid rgba(255,255,255,0.8)
         &:last-child
           border-bottom 0
         .more
           display block
-          width 0.8rem
-          height 0.8rem
+          size rem(50)
           position absolute
-          right 0.8rem
+          right rem(50)
           top 50%
           transform translate3d(0,-50%,0)
 </style>

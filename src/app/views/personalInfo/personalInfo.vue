@@ -8,9 +8,10 @@
       @right-click="next">
     </header-nav>
     <hello :msg="$t('welcome.p1')"></hello>
-    <div class="personalInfo-box" v-heightauto>
+    <div class="personalInfo-box">
       <div class="header-img-box" :class="personalInfomation.sex" @touchstart="selectHeaderImg">
-        <img v-show="personalInfomation.headerImg" :src="personalInfomation.headerImg" alt="" width="100%" height="100%" class="header-img">
+        <img class="header-img" v-show="personalInfomation.headerImg" :src="personalInfomation.headerImg" alt="" width="100%" height="100%" class="header-img">
+        <!-- <img v-show="true" src="http://image.zhangxinxu.com/image/blog/201406/bangbangtang.jpg" alt="" width="100%" height="100%" class="header-img"> -->
       </div>
       <div class="sex-box">
         <span class="text">{{$t('user_message.sex')}}</span>
@@ -22,13 +23,13 @@
           <i class="icon name-icon"></i>
           <input class="name-input" type="text" name="name" v-model="personalInfomation.name" placeholder="{{$t('placeholders.user_name_length')}}">
         </div>
-        <div class="other-information birthday-box">
+        <div class="other-information birthday-box" @touchend="showBirthdayPicker">
           <i class="icon birthday-icon"></i>
           <span class="birthday-text">
             {{birthday.year}} - {{birthday.month}}
           </span>
           <i class="more"></i>
-          <input class="birthday-input" type="date" name="birthday" v-model="personalInfomation.birthday">
+          <!-- <input class="birthday-input" type="date" name="birthday" v-model="personalInfomation.birthday"> -->
         </div>
         <div class="other-information height-box" @touchend="showHeightPicker">
           <i class="icon height-icon"></i>
@@ -72,6 +73,7 @@
       return {
         selectingHeight: false,
         selectingWeight: false,
+        selectingBirthday: false,
         personalInfomation: {
           headerImg: '',
           sex: 'male',
@@ -93,10 +95,27 @@
         return result
       }
     },
-
+    route: {
+      data () {
+        this.initPersonalInfomation()
+      }
+    },
     ready () {
     },
     methods: {
+      /**
+       * 初始化用户信息
+       * @return {[type]} [description]
+       */
+      initPersonalInfomation () {
+        if (this.personalInfomation.sex === 'male' && this.personalInfomation.birthday === '1990-10-01') {
+          this.personalInfomation.height = 178
+          this.personalInfomation.weight = 80
+        } else if (this.personalInfomation.sex === 'female' && this.personalInfomation.birthday === '1990-10-01') {
+          this.personalInfomation.height = 168
+          this.personalInfomation.weight = 50
+        }
+      },
       /**
        * 图片选择的回调事件
        * @return {[type]} [description]
@@ -104,7 +123,12 @@
       onPhotoPickerResult () {
         var self = this
         SDK.on('onPhotoPickerResult', (r) => {
-          var imgPath = r.path.split('html/')[1]
+          var imgPath
+          if (/android/i.test(r.path)) {
+            imgPath = r.path
+          } else {
+            imgPath = r.path.split('html/')[1]
+          }
           self.personalInfomation.headerImg = imgPath
         })
       },
@@ -128,6 +152,17 @@
             self.personalInfomation.weight = Math.round(weight * 10) / 10
           })
         }
+        if (this.selectingBirthday) {
+          this.selectingBirthday = false
+          SDK.on('onPickerResult', (r) => {
+            var year = r.selectedData[0].replace(/[^\d]/g, '')
+            var month = r.selectedData[1].replace(/[^\d]/g, '')
+            month = month - 0 > 9 ? month : '0' + month
+            self.personalInfomation.birthday = year + '-' + month + '-01'
+            // var birthday = r.selectedData.join('').replace(/[^\d.]/g, '') - 0
+            // self.personalInfomation.birthday = Math.round(weight * 10) / 10
+          })
+        }
       },
 
       /**
@@ -145,9 +180,9 @@
         }
         api.addUser(self.personalInfomation).then(function (r) {
           if (r.status - 0 === 200) {
-            window.localStorage.firstEntry = true
+            window.localStorage.setItem('firstEntry', 'true')
             self.showMessage(self.$t('messages.setting_success'))
-            self.$route.router.go('/index')
+            self.$route.router.replace('/index')
           }
         })
       },
@@ -172,7 +207,7 @@
       selectHeaderImg () {
         var self = this
         var params = {}
-        params.saveImgName = 'userImg-' + new Date().getTime()
+        params.saveImgName = 'userImg-' + new Date().getTime() + '.png'
         api.showPhotoPicker(params).then((r) => {
           if (r.status - 0 === 200) {
             self.onPhotoPickerResult()
@@ -181,13 +216,36 @@
       },
 
       /**
+       * 显示日期选择器
+       * @return {[type]} [description]
+       */
+      showBirthdayPicker () {
+        var self = this
+        var params = {}
+        params.title = self.$t('user_message.birthday')
+        params.datasource = [[], []]
+        params.selectRow = [new Date(self.personalInfomation.birthday).getFullYear() - 1900, new Date(self.personalInfomation.birthday).getMonth()]
+        for (let i = 1900; i <= 2100; i++) {
+          params.datasource[0].push(i + '')
+        }
+        for (let i = 1; i <= 12; i++) {
+          params.datasource[1].push(i + '')
+        }
+        api.showPicker(params).then((r) => {
+          if (r.status - 0 === 200) {
+            self.selectingBirthday = true
+            this.onSelectPicker()
+          }
+        })
+      },
+      /**
        * 显示身高选择器
        * @return {[type]} [description]
        */
       showHeightPicker () {
         var self = this
         var params = {}
-        params.title = '身高'
+        params.title = self.$t('user_message.height')
         params.datasource = [[], []]
         params.selectRow = [parseInt(self.personalInfomation.height) - 50, Math.round((self.personalInfomation.height - parseInt(self.personalInfomation.height)) * 10)]
         for (let i = 50; i <= 250; i++) {
@@ -211,7 +269,7 @@
       showWeightPicker () {
         var self = this
         var params = {}
-        params.title = '体重'
+        params.title = self.$t('user_message.weight')
         params.datasource = [[], []]
         params.selectRow = [parseInt(this.personalInfomation.weight) - 5, Math.round((this.personalInfomation.weight - parseInt(this.personalInfomation.weight)) * 10)]
         for (let i = 5; i <= 399; i++) {
@@ -220,6 +278,7 @@
         for (let i = 0; i < 10; i++) {
           params.datasource[1].push('.' + i + 'kg')
         }
+        // alert(JSON.stringify(params))
         api.showPicker(params).then((r) => {
           if (r.status - 0 === 200) {
             self.selectingWeight = true
@@ -237,12 +296,14 @@
         if (this.personalInfomation.headerImg) {
           this.personalInfomation.headerImg = sex === 'male' ? 'static/male.png' : 'static/female.png'
         }
+        this.initPersonalInfomation()
       }
     }
   }
 </script>
 
 <style lang="stylus">
+  @import '../../../shared/assets/style/common'
 
   ::-webkit-input-placeholder
     color rgba(0,0,0,0.25)
@@ -251,17 +312,18 @@
       width 100%
       position relative
       .header-img-box
-        width 6rem
-        height 6rem
-        line-height 6rem
+        size rem(260)
         text-align center
         overflow hidden
-        margin 1rem auto
-        border 0.3rem solid #83ddde
+        margin rem(40) auto .5rem
+        border rem(15) solid #83ddde
         border-radius 10rem
-        box-shadow 0.1rem 0.1rem 0.1rem rgba(0,0,0,0.2)
-        background center /101%
+        /*box-shadow 0.1rem 0.1rem 0.1rem rgba(0,0,0,0.2)*/
+        background-position center center
+        background-size rem(260)
         position relative
+        .header-img
+          border-radius 50rem
       .header-img-box.male
         background-image url('../../assets/images/icons/male.png')
       .header-img-box.female
@@ -269,66 +331,62 @@
 
       .sex-box
         width 100%
-        height 2.6rem
-        line-height 2.6rem
+        height rem(84)
+        line-height rem(84)
         box-sizing border-box
-        padding-left 2rem
-        margin 0.5rem 0
+        padding-left rem(110)
+        margin rem(20) 0 rem(40)
         .text
-          font-size 0.9rem
+          font-dpr 18px
           float left
         .button-box
           float left
-          width 2.2rem
-          height 2.2rem
+          size rem(84)
           background-image url('../../assets/images/icons/sex.png')
-          background-size 258% 200%
-          margin-left 1rem
+          background-size rem(168) rem(168)
+          margin-left rem(45)
         .male
-          background-position top left
+          &.selected
+            background-position 0 rem(-84)
         .female
-          background-position top right
-        .selected
-          background-position-y bottom
+          background-position rem(-84) 0
+          &.selected
+            background-position rem(-84) rem(-84)
       .other-information-box
         width 100%
-        padding-left 2rem
+        padding-left rem(110)
         box-sizing border-box
         .other-information
           width 100%
           position relative
-          height 2rem
-          line-height 2rem
+          height rem(80)
+          line-height rem(80)
           border-top 1px solid rgba(255,255,255,0.8)
           box-sizing border-box
-          padding-left 0.2rem
-          font-size 0.75rem
+          padding-left rem(30)
+          font-dpr 16px
           i.icon
-            display block
-            position absolute
-            left -1.8rem
-            width 1.8rem
-            height 1.6rem
-            padding-top 0.3rem
-            background-size 100% 360%
+            absolute left rem(-80) top rem(8)
+            size rem(64)
+            background-size rem(64) rem(256)
             background-image url('../../assets/images/icons/information-icon.png')
+            background-repeat no-repeat
           i.icon.name-icon
-            background-position center 0
+            background-position 0 0
           i.icon.birthday-icon
-            background-position center 31%
+            background-position 0 rem(-64)
           i.icon.height-icon
-            background-position center 64%
+            background-position 0 rem(-128)
           i.icon.weight-icon
-            background-position center 100%
+            background-position 0 rem(-192)
           i.more
             display block
-            width 1rem
-            height 1rem
-            position absolute
-            right 1rem
-            top 50%
+            size rem(50)
+            absolute right rem(30) top 50%
             transform translate3d(0,-50%,0)
+            back-ground-size rem(50)
           .name-input
+            width 100%
             background none
             border 0
           .birthday-input
@@ -340,6 +398,11 @@
             opacity 0
           &:last-child
             border-bottom 1px solid rgba(255,255,255,0.8)
+      .name-box
+        padding-right 1rem
       /*.fat-scale
         background-image url('../../assets/images/devices/fat-scale.png')*/
+  .canvas-box
+    position absolute
+    left -999rem
 </style>

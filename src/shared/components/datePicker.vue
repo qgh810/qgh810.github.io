@@ -165,8 +165,7 @@
   }
 </script>
 <style lang="stylus">
-  /*@import '../assets/stylus/common'*/
-
+  @import '../assets/style/common'
 
   .color_theme
     color #ffa96f
@@ -174,12 +173,9 @@
     color #cccccc
 
   .data-picker
-    width 100%
-    height 100%
-    position absolute
-    top 0
-    left 0
-    font-family '黑体'
+    size 100%
+    absolute left top
+    /*font-family '黑体'*/
     z-index 99
     background rgba(0,0,0,0.4)
     .contentBox
@@ -188,57 +184,51 @@
       margin 0 auto
       text-align center
       color #5c656e
-      font-size 0.7rem
+      font-dpr 18px
       position relative
       perspective 30rem
       .mask
-        width 100%
-        height 40rem
-        position fixed
-        top 0
-        left 0
+        size 100% 40rem
+        fixed top left
         //background rgba(0,0,0,0.5)
         z-index -1
       .header
         background #fff
         .monthBox
-          height 1.8rem
-          line-height 1.8rem
+          height 1.2rem
+          line-height 1.2rem
           overflow hidden
           position relative
           .title
-            font-size 0.8rem
+            font-dpr 18px
           .prev
-            position absolute
-            top 0
-            left 0
-            width 2rem
-            height 100%
-            background url('../assets/images/icons/left-yellow.png') no-repeat center
-            background-size 1rem 1rem
           .next
-            position absolute
-            top 0
+            absolute top
+            size 1.5rem 100%
+            background-repeat no-repeat
+            background-position center center
+            background-size .5rem .5rem
+          .prev
+            left 0
+            background-image url('../assets/images/icons/left-yellow.png')
+          .next
             right 0
-            width 2rem
-            height 100%
-            background url('../assets/images/icons/right-yellow.png') no-repeat center center
-            background-size 1rem 1rem
+            background-image url('../assets/images/icons/right-yellow.png')
         .weekBox
           border-bottom 1px solid #ffa96f
-          font-size 0.65rem
+          font-dpr 12px
           ul
             li.week
               width 14.286%
-              height 1.5rem
-              line-height 1.5rem
+              height .8rem
+              line-height .8rem
               display inline-block
               span
                 width 100%
       .date_body
         background #fff
         transition all ease 0.8s
-        transform-style: preserve-3d
+        transform-style preserve-3d
         .dayBox
           text-align left
           padding 0.1rem 0
@@ -246,17 +236,17 @@
             background #fff
             li
               width 14.286%
-              height 1.6rem
-              line-height 1.6rem
+              height 1.2rem
+              line-height 1.2rem
               float left
               overflow hidden
               color #cccccc
               text-align center
               span
                 display inline-block
-                width 1.4rem
-                height 1.4rem
-                line-height 1.4rem
+                width 1.2rem
+                height 1.2rem
+                line-height 1.2rem
                 border-radius 50%
               .today
                 background #ffa96f
@@ -267,6 +257,6 @@
             position absolute
             transform rotateY(180deg) translateZ(0.05rem)
           .ul2
-            height 9.6rem
+            height 7.2rem
             transform rotateY(0deg) translateZ(0.05rem)
 </style>

@@ -62,36 +62,33 @@
 
 </script>
 <style lang="stylus">
-  /*@import '../assets/stylus/common'*/
+  @import '../assets/style/common'
+
   .header-box1
     width 100%
     background none
-    font-size 0.8rem
+    font-dpr 18px
     .margin-top
       height 0.7rem
-
       color #fff
     .content
       width 100%
-      height 2rem
+      height 1.2rem
       position relative
       .title
-        width 70%
         height 100%
-        line-height 2rem
+        line-height 1.2rem
         margin 0 auto
         text-align center
-        overflow hidden
-        text-overflow ellipsis
+        text-overflow 70%
         color #fff
+        text-transform capitalize
       .left
         width 15%
         height 100%
-        position absolute
-        left 0
-        top 0
+        absolute left top
         background url("../assets/images/icons/icon_leftArrow.png") no-repeat center
-        background-size 20% 40%
+        background-size rem(26) rem(42)
       .right
         width 15%
         height 100%
@@ -99,13 +96,14 @@
         right 0
         top 0
         overflow hidden
+        text-overflow 15%
         .rightText
-          font-size 0.7rem
-          line-height 2rem
+          font-dpr 16px
+          line-height 1.2rem
       .add
         background url("../assets/images/icons/icon-add.png") no-repeat center
-        background-size 40% 42%
+        background-size rem(40) rem(40)
       .set
         background url("../assets/images/icons/icon-set.png") no-repeat center
-        background-size 60% 62%
+        background-size rem(60) rem(60)
 </style>

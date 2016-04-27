@@ -40,6 +40,8 @@
 </script>
 
 <style lang="stylus">
+  @import '../assets/style/common'
+
   .modal
     position fixed
     top 0
@@ -57,15 +59,15 @@
       position relative
       background #FFF
       margin 0 auto
-      width 70%
+      width 80%
       max-width 14rem
       box-shadow 0 2px 8px rgba(0, 0, 0, .3)
       transition all .3s ease
-      border-radius 0.2rem
+      border-radius rem(10)
       .tips
-        font-size 1rem
+        font-dpr 16px
         text-align center
-
+        color gray-darker
     .modal-header
       padding 0.5rem 0.6rem 0
 
@@ -74,9 +76,10 @@
         color gray-darker
         margin 0
         text-align center
+        font-dpr 20px
 
     .modal-body
-      padding 0.5rem
+      padding rem(30)
       width 100%
       box-sizing border-box
     .modal-footer
@@ -91,6 +94,7 @@
           box-sizing border-box
           flex 1
           text-align center
+          font-dpr 16px
           &:last-child
             border-right none
 </style>

@@ -24,14 +24,26 @@
 .test
   position fixed
   left 0
-  top 0
+  bottom 0
   &:after
     display block
     content "测试按钮"
     background red
     color #fff
+    font-dpr 32px
 
 
 //ios滚动bug 让页面滚动流畅
 .iosScrollBug
   -webkit-overflow-scrolling touch
+.log-box
+  position fixed
+  top 0
+  left 0
+  width 100%
+  max-height 5rem
+  z-index 9999
+  background rgba(0,0,0,0.7)
+  overflow auto
+  padding-bottom 2rem
+  box-sizing border-box
