@@ -66,6 +66,7 @@
         var result = []
         this.navlist.map((item) => {
           var obj = {}
+
           obj.name = item.name
           obj.fn = item.fn
           obj.touchDown = false
@@ -141,7 +142,6 @@
   .container .header-box {
     width: 100%;
     height: 1.6rem;
-    background: none;
   }
   .container .header-box .menu-button-box {
     width: 1.6rem;
@@ -196,9 +196,8 @@
     position: fixed;
     top: 0;
     right: 0;
-    /*background: rgba(51,51,51,1);*/
     color: #fff;
-    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.2);
+    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.3);
     transform: translate3d(120%,0,0);
     transition: transform cubic-bezier(0.175, 0.885, 0.470, 1.2) 0.5s;
   }
@@ -210,7 +209,6 @@
     position: absolute;
     left: 99%;
     top: 0;
-    /*background: rgba(51,51,51,1);*/
   }
   .container .header-box .menu-list-box.open {
     transform: translate3d(0,0,0);
@@ -259,8 +257,7 @@
     text-shadow: -0.2rem 0.1rem 0.1rem rgba(0,0,0,0.3);
   }
   .container .header-box .menu-list-box .menu-ul .menu-li.touchDown {
-    background: rgba(255,255,255,0.1);
-    box-shadow: -0.05rem 0.1rem 0.4rem rgba(0,0,0,0.2);
+    box-shadow: -0.05rem 0.1rem 0.3rem rgba(0,0,0,0.2);
   }
   .container .header-box .menu-list-box .menu-ul .touch {
     width: 2.5rem;
