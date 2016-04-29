@@ -2,6 +2,21 @@
   <div class="header-container">
     <div class="container">
       <div class="header-box">
+        <div class="my-msg">
+          <div class="msg-box">
+            <div class="header-img">
+              <img src="https://avatars0.githubusercontent.com/u/16077715?v=3&s=150" width="100%" height="100%" alt="">
+            </div>
+            <div class="base-msg">
+              <div class="name">
+                <span>邱国辉</span>
+              </div>
+              <div class="say">
+                简介
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="menu-button-box" @click="openNavEvent">
           <div class="menu-button" :class="{'open': open}">
             <div class="path path1"></div>
@@ -66,7 +81,6 @@
         var result = []
         this.navlist.map((item) => {
           var obj = {}
-
           obj.name = item.name
           obj.fn = item.fn
           obj.touchDown = false
@@ -82,7 +96,10 @@
         self.selectedNav = nav
         window.document.title = nav.name
         self.openNavEvent()
-        nav.fn()
+        var path = nav.fn()
+        if (typeof path === 'string') {
+          self.$route.router.replace(path)
+        }
       },
       touchDown: function (nav) {
         var self = this
@@ -134,22 +151,50 @@
     display none
   .header-container
     z-index 100
-    height 1.6rem
+    height 2.2rem
   .container {
     width: 100%;
     height: 100%;
   }
-  .container .header-box {
-    width: 100%;
-    height: 1.6rem;
-  }
+  .container
+   .header-box
+    width 100%
+    height 2.2rem
+    background none
+    .my-msg
+      width 100%
+      height 100%
+      .msg-box
+        width 100%
+        height 100%
+        box-sizing border-box
+        padding 0 2.2rem
+        .header-img
+          width 2.2rem
+          height 2.2rem
+          padding 0.3rem
+          box-sizing border-box
+          position absolute
+          left 0
+          img
+            border-radius 0.2rem
+        .base-msg
+          height 100%
+          width 100%
+          .name
+            height 1.1rem
+            line-height 1.5rem
+            font-size 0.7rem
+          .say
+            height 1.1rem
+            line-height 0.6rem
   .container .header-box .menu-button-box {
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 2.2rem;
+    height: 2.2rem;
     position: absolute;
     top: 0;
     right: 0;
-    padding: 0.4rem;
+    padding: 0.7rem;
     box-sizing: border-box;
     z-index: 101;
   }
@@ -196,8 +241,9 @@
     position: fixed;
     top: 0;
     right: 0;
+    /*background: rgba(51,51,51,1);*/
     color: #fff;
-    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.3);
+    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.2);
     transform: translate3d(120%,0,0);
     transition: transform cubic-bezier(0.175, 0.885, 0.470, 1.2) 0.5s;
   }
@@ -209,6 +255,7 @@
     position: absolute;
     left: 99%;
     top: 0;
+    /*background: rgba(51,51,51,1);*/
   }
   .container .header-box .menu-list-box.open {
     transform: translate3d(0,0,0);
@@ -257,7 +304,8 @@
     text-shadow: -0.2rem 0.1rem 0.1rem rgba(0,0,0,0.3);
   }
   .container .header-box .menu-list-box .menu-ul .menu-li.touchDown {
-    box-shadow: -0.05rem 0.1rem 0.3rem rgba(0,0,0,0.2);
+    background: rgba(255,255,255,0.1);
+    box-shadow: -0.05rem 0.1rem 0.4rem rgba(0,0,0,0.2);
   }
   .container .header-box .menu-list-box .menu-ul .touch {
     width: 2.5rem;

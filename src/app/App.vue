@@ -39,33 +39,33 @@
         debug: process.env.NODE_ENV !== 'production',
         nav: [
           {
-            name: '菜单1', // 首页
+            name: '首页', // 首页
             fn () {
-              console.log(111)
+              return '/index'
             }
           },
           {
-            name: '菜单2', // 笔记
+            name: '笔记', // 笔记
             fn () {
-              console.log(333)
+              return '/note'
             }
           },
           {
-            name: '菜单3', // 收藏
+            name: '收藏', // 收藏
             fn () {
-              console.log(333)
+              return '/collection'
             }
           },
           {
-            name: '菜单4', // 生活
+            name: '生活', // 生活
             fn () {
-              console.log(333)
+              return '/life'
             }
           },
           {
-            name: '菜单5', // 关于
+            name: '关于', // 关于
             fn () {
-              console.log(222)
+              return '/about'
             }
           }
         ]

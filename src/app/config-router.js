@@ -14,6 +14,26 @@ var configRouter = function (router) {
     // 主界面
     '/index': {
       component: require('./views/index/index.vue')
+    },
+
+    // 笔记
+    '/note': {
+      component: require('./views/note/index.vue')
+    },
+
+    // 收藏
+    '/collection': {
+      component: require('./views/collection/index.vue')
+    },
+
+    // 生活
+    '/life': {
+      component: require('./views/life/index.vue')
+    },
+
+    // 关于
+    '/about': {
+      component: require('./views/about/index.vue')
     }
 
   })
