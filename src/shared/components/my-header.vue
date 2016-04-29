@@ -22,6 +22,9 @@
         </div>
       </div>
     </div>
+    <div class="iframe">
+      <iframe :src="'static/iframe.png?title=' + selectedNav.name" frameborder="0"></iframe>
+    </div>
   </div>
 </template>
 
@@ -44,6 +47,7 @@
     data: function () {
       return {
         open: false,
+        selectedNav: {},
         list: [
           // {
           //   name: '菜单n',
@@ -68,13 +72,15 @@
           result.push(obj)
         })
         this.list = result
-        console.log(this.list)
       },
       selctedNav: function (nav) {
         var self = this
         self.list.map(function (item) {
           item.touchDown = false
         })
+        self.selectedNav = nav
+        window.document.title = nav.name
+        self.openNavEvent()
         nav.fn()
       },
       touchDown: function (nav) {
@@ -96,7 +102,7 @@
           })
           touch.on(touchDom, 'drag', function (ev) {
             menuListBox.style.webkitTransition = '0s'
-            if (ev.x > -30) {
+            if (ev.x > -50) {
               menuListBox.style.webkitTransform = 'translate3d(' + ev.x + 'px, 0,0)'
             }
           })
@@ -123,6 +129,8 @@
 <style lang="stylus">
   @import "../assets/style/common"
 
+  .iframe
+    display none
   .header-container
     z-index 100
     height 1.6rem
@@ -255,10 +263,10 @@
     box-shadow: -0.05rem 0.1rem 0.4rem rgba(0,0,0,0.2);
   }
   .container .header-box .menu-list-box .menu-ul .touch {
-    width: 1.5rem;
+    width: 2.5rem;
     height: 100%;
     position: absolute;
-    left: 0;
+    left: -1rem;
     top: 0;
   }
   .container .header-box .menu-list-box .menu-ul .filter {
