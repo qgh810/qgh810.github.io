@@ -39,19 +39,25 @@
         debug: process.env.NODE_ENV !== 'production',
         nav: [
           {
-            name: '111',
+            name: '首页',
             fn () {
               alert(111)
             }
           },
           {
-            name: '222',
+            name: '关于',
             fn () {
               alert(222)
             }
           },
           {
-            name: '333',
+            name: '作品',
+            fn () {
+              alert(333)
+            }
+          },
+          {
+            name: '收藏',
             fn () {
               alert(333)
             }

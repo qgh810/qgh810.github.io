@@ -44,7 +44,14 @@
     data: function () {
       return {
         open: false,
-        list: []
+        list: [
+          // {
+          //   name: '菜单n',
+          //   fn () {
+          //     alert('nnn')
+          //   }
+          // }
+        ]
       }
     },
     ready: function () {
@@ -54,11 +61,14 @@
       initNav: function () {
         var result = []
         this.navlist.map((item) => {
-          var obj = item
+          var obj = {}
+          obj.name = item.name
+          obj.fn = item.fn
           obj.touchDown = false
           result.push(obj)
         })
         this.list = result
+        console.log(this.list)
       },
       selctedNav: function (nav) {
         var self = this
@@ -123,7 +133,7 @@
   .container .header-box {
     width: 100%;
     height: 1.6rem;
-    background: rgba(0,0,0,0.3);
+    background: none;
   }
   .container .header-box .menu-button-box {
     width: 1.6rem;
@@ -178,9 +188,9 @@
     position: fixed;
     top: 0;
     right: 0;
-    background: rgba(51,51,51,1);
+    /*background: rgba(51,51,51,1);*/
     color: #fff;
-    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.3);
+    box-shadow: -0.2rem 0 0.3rem rgba(0,0,0,0.2);
     transform: translate3d(120%,0,0);
     transition: transform cubic-bezier(0.175, 0.885, 0.470, 1.2) 0.5s;
   }
@@ -192,7 +202,7 @@
     position: absolute;
     left: 99%;
     top: 0;
-    background: rgba(51,51,51,1);
+    /*background: rgba(51,51,51,1);*/
   }
   .container .header-box .menu-list-box.open {
     transform: translate3d(0,0,0);
@@ -238,9 +248,11 @@
     line-height: 1.5rem;
     font-size: 0.6rem;
     padding-left: 0.5rem;
+    text-shadow: -0.2rem 0.1rem 0.1rem rgba(0,0,0,0.3);
   }
   .container .header-box .menu-list-box .menu-ul .menu-li.touchDown {
-    background: rgba(255,255,255,0.1)
+    background: rgba(255,255,255,0.1);
+    box-shadow: -0.05rem 0.1rem 0.4rem rgba(0,0,0,0.2);
   }
   .container .header-box .menu-list-box .menu-ul .touch {
     width: 1.5rem;
