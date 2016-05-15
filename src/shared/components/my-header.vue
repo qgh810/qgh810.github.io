@@ -25,6 +25,7 @@
           </div>
         </div>
         <div class="menu-list-box" :class="{'open': open}">
+          <div class="filter-blur"></div>
           <ul class="menu-ul">
             <!-- <li class="filter"></li> -->
             <li class="menu-li" v-for="nav in list" :class="{'touchDown': nav.touchDown}" @touchstart="touchDown(nav)" @touchend="selctedNav(nav)">
@@ -250,12 +251,13 @@
   .container .header-box .menu-list-box:after {
     content: '';
     display: block;
-    width: 5rem;
+    width: 100%;
     height: 100%;
     position: absolute;
-    left: 99%;
+    left: 0;
     top: 0;
-    /*background: rgba(51,51,51,1);*/
+    z-index: -1;
+    background: rgba(51,51,51,1);
   }
   .container .header-box .menu-list-box.open {
     transform: translate3d(0,0,0);

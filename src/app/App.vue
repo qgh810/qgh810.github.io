@@ -98,8 +98,9 @@
   .page-container
     width 100%
     height 100%
-    background no-repeat url('../shared/assets/images/bj.jpg') fixed center top
-    background-size 100% 100%
+    /*background no-repeat url('../shared/assets/images/bj.png') fixed center top*/
+    background black
+    background-size auto 100%
     position relative
     .view
       width 100%
