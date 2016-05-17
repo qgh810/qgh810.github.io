@@ -3,7 +3,7 @@
     <div class="container">
       <div class="header-box">
         <div class="my-msg">
-          <div class="msg-box">
+          <!-- <div class="msg-box">
             <div class="header-img">
               <img src="https://avatars0.githubusercontent.com/u/16077715?v=3&s=150" width="100%" height="100%" alt="">
             </div>
@@ -15,9 +15,9 @@
                 简介
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
-        <div class="menu-button-box" @click="openNavEvent">
+        <div class="menu-button-box" @touchend.stop="openNavEvent">
           <div class="menu-button" :class="{'open': open}">
             <div class="path path1"></div>
             <div class="path path2"></div>

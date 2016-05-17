@@ -31,3 +31,14 @@ export var heightauto = function () {
     dom.style.height = (window.innerHeight - dom.offsetTop) + 'px'
   }, 400)
 }
+//
+// /**
+//  * dom点击动画效果
+//  * @param  {Function} fn 到底的回调时间
+//  * @return {[type]}      [description]
+//  */
+// export var clickAnimation = function () {
+//   var dom = this.el
+//   console.log(dom)
+//   console.log(touch)
+// }

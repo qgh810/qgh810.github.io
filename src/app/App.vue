@@ -1,5 +1,5 @@
 <template>
-  <div class="page-container">
+  <div class="page-container" @touchstart="clickAnimationEvent($event)">
     <nav-header :navlist="nav"></nav-header>
     <router-view
     class="view"
@@ -7,6 +7,9 @@
     transition-mode="out-in"></router-view>
     <alert :content="message" :show="showAlert"></alert>
     <!-- <div class="test" @touchend="reload"></div> -->
+    <div class="animation-dom" v-if="clickAnimation.show" :style="style">
+      <div class="circular" v-for="point in clickAnimation.position" :style="'left: ' + point.x + 'px;top:' + point.y + 'px'"></div>
+    </div>
   </div>
 </template>
 
@@ -68,11 +71,67 @@
               return '/about'
             }
           }
-        ]
+        ],
+        clickAnimation: {
+          show: false,
+          width: 0,
+          height: 0,
+          left: 0,
+          top: 0,
+          borderRadius: '',
+          position: [
+            {
+              x: 0,
+              y: 0
+            }
+          ]
+        }
       }
     },
-
+    computed: {
+      style () {
+        var result = 'width:' + this.clickAnimation.width + 'px;height:' + this.clickAnimation.height + 'px;left:' + this.clickAnimation.left + 'px;top:' + this.clickAnimation.top + 'px;border-radius:' + this.clickAnimation.borderRadius
+        return result
+      }
+    },
     methods: {
+      clickAnimationEvent (event) {
+        var dom = event.target
+        var result = {
+          show: true,
+          width: dom.clientWidth,
+          height: dom.clientHeight,
+          left: this.getPosition(dom).left,
+          top: this.getPosition(dom).top,
+          borderRadius: dom.style.borderRadius,
+          position: []
+        }
+        for (let i = 0; i < event.targetTouches.length; i++) {
+          let targetTouch = event.targetTouches[i]
+          let obj = {
+            x: targetTouch.clientX - this.getPosition(dom).left,
+            y: targetTouch.clientY - this.getPosition(dom).top
+          }
+          result.position.push(obj)
+        }
+        console.log(JSON.stringify(result))
+        this.clickAnimation = result
+        clearTimeout(this.tid)
+        this.tid = setTimeout(() => {
+          this.clickAnimation.show = false
+        }, 500)
+      },
+      getPosition (node) {
+        var left = node.offsetLeft
+        var top = node.offsetTop
+        var parent = node.offsetParent
+        while (parent) {
+          left += parent.offsetLeft
+          top += parent.offsetTop
+          parent = parent.offsetParent
+        }
+        return {left: left, top: top}
+      },
       reload () {
         window.location.reload()
       }
@@ -107,4 +166,23 @@
       height 100%
       overflow hidden
       position relative
+  .animation-dom
+    position fixed
+    z-index 999
+    overflow hidden
+    .circular
+      width 0.5rem
+      height 0.5rem
+      border-radius 0.5rem
+      background #fff
+      position absolute
+      opacity 0
+      animation clickAnimation 0.2s
+  @keyframes clickAnimation
+    from
+      transform scale(0)
+      opacity 0.3
+    to
+      transform scale(20)
+      opacity 0
 </style>
