@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>dnd DEMO</title>
+    <title>demo1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <script type="text/javascript" src="assets/js/dnd.js"></script>
+    <script type="text/javascript" src="assets/js/dnd.min.js"></script>
 
     <style>
       html, body {
@@ -21,6 +21,7 @@
         padding: 20px;
         box-sizing: border-box;
         background: #fff;
+        overflow: auto;
       }
 
       .lists {
@@ -57,6 +58,7 @@
         position: relative;
         float: left;
         margin-right: 10px;
+        margin-bottom: 10px;
         width: 200px;
         height: 200px;
         border: 1px solid #999;
@@ -133,15 +135,15 @@
         },
         onDragEnter: function (params) {
           if (params.data === 1) {
-            params.methods.showStateicon('reject')
+            params.methods.showStateIcon('error')
             params.el.style.background = 'rgba(255, 0, 0, 0.2)'
           } else {
-            params.methods.showStateicon('add')
+            params.methods.showStateIcon('add')
             params.el.style.background = 'rgba(0, 0, 255, 0.2)'
           }
         },
         onDragLeave: function (params) {
-          params.methods.hideStateicon()
+          params.methods.hideStateIcon()
           if (params.data === 1) {
             params.el.style.background = 'rgba(255, 0, 0, 0.1)'
           } else {
@@ -171,15 +173,15 @@
         },
         onDragEnter: function (params) {
           if (params.data === 2) {
-            params.methods.showStateicon('reject')
+            params.methods.showStateIcon('error')
             params.el.style.background = 'rgba(255, 0, 0, 0.2)'
           } else {
-            params.methods.showStateicon('add')
+            params.methods.showStateIcon('add')
             params.el.style.background = 'rgba(0, 0, 255, 0.2)'
           }
         },
         onDragLeave: function (params) {
-          params.methods.hideStateicon()
+          params.methods.hideStateIcon()
           if (params.data === 2) {
             params.el.style.background = 'rgba(255, 0, 0, 0.1)'
           } else {
@@ -205,11 +207,11 @@
           params.el.style.background = 'rgba(0, 0, 255, 0.1)'
         },
         onDragEnter: function (params) {
-          params.methods.showStateicon('delete')
+          params.methods.showStateIcon('delete')
           params.el.style.background = 'rgba(255, 0, 0, 0.3)'
         },
         onDragLeave: function (params) {
-          params.methods.hideStateicon()
+          params.methods.hideStateIcon()
           params.el.style.background = 'rgba(0, 0, 255, 0.1)'
         },
         onDragEnd: function (params) {
