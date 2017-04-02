@@ -1,21 +1,23 @@
-# mytestporject
+# 项目列表
 
-> a vue.js porject
+### dnd.js
 
-## Build Setup
+拖放库, 兼容ie, 兼容移动端, 附带动画效果, 附带封装好的vue组件
 
-``` bash
-# install dependencies
-npm install
+[查看DEMO](http://qgh810.github.io/src/dnd/index.html)
 
-# serve with hot reload at localhost:9001
-npm run dev
+项目地址及说明文档: [https://github.com/qgh810/dnd](https://github.com/qgh810/dnd)
 
-# build for production with minification
-npm run build
+<img src="https://raw.githubusercontent.com/qgh810/draggable/master/demo/demo.gif">
 
-# run unit tests
-npm test
-```
+---
 
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+### animate-text
+
+文字动画库, 跳变动画显示文字或者数字,轻巧易用
+
+[查看DEMO](http://qgh810.github.io/src/animate-text/index.html)
+
+项目地址: [https://github.com/qgh810/animate-text](https://github.com/qgh810/animate-text)
+
+<img src="https://raw.githubusercontent.com/qgh810/qgh810.github.io/master/src/animate-text/assets/images/demo.gif">
