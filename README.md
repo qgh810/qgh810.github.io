@@ -32,6 +32,12 @@ css清浮动，防止 margin 重叠等...
 各种实用的css技巧
 ```
 
+#### [《你不知道的 CSS》之等比例缩放的盒子](https://w3ctech.com/topic/1483)
+
+```
+纯css实现容器的等比缩放, 即容器高度随着宽度改变而改变
+```
+
 #### [html拷贝](https://zhuanlan.zhihu.com/p/23920249)
 
 ```
