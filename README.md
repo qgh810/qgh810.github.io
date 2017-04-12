@@ -85,6 +85,11 @@ css清浮动，防止 margin 重叠等...
 翻译啊日期工具啊base64之类的各种实用插件
 ```
 
+#### [跨域问题总汇](https://juejin.im/post/58e8c932ac502e4957bde78b)
+```
+比较详细的跨域问题详解及解决方法, 有些方法我们现在已经不用了 但是学一下还是很有好处
+```
+
 #### [弹性相册效果](https://tympanus.net/Development/ElasticStack/)
 
 ```
