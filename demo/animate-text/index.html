@@ -66,6 +66,38 @@
         cursor: pointer;
         background: #fff;
       }
+      .animate-text-text-span {
+        display: inline-block;
+        animation: text-enter-top 0.2s;
+        transform-origin: 200% center;
+      }
+      .animate-text-text-span:nth-child(2n) {
+        animation: text-enter-bottom 0.2s;
+      }
+      @keyframes text-enter-top {
+        from {
+          color: blue;
+          opacity: 0;
+          transform: rotate(25deg);
+        }
+        to {
+          color: red;
+          opacity: 1;
+          transform: rotate(0deg);
+        }
+      }
+      @keyframes text-enter-bottom {
+        from {
+          color: red;
+          opacity: 0;
+          transform: rotate(-25deg);
+        }
+        to {
+          color: blue;
+          opacity: 1;
+          transform: rotate(0deg);
+        }
+      }
     </style>
   </head>
   <body>
@@ -97,6 +129,14 @@
           重新播放
         </div>
       </div>
+      <div class="part">
+        <div class="demo demo3">
+          <span class="string">文字出现动画效果自定义</span>
+        </div>
+        <div class="play-btn" id="btn3">
+          重新播放
+        </div>
+      </div>
 
     </div>
   </body>
@@ -112,6 +152,12 @@
         onAnimated: function () {console.log('数字动画结束')}
       })
 
+      var animateText2 = new AnimateText('.app-root .demo3 .string', {
+        time: 1000,
+        spanClassName: 'animate-text-text-span',
+        onAnimated: function () {console.log('动画结束')}
+      })
+
       var btn1 = document.getElementById('btn1')
       btn1.addEventListener('click', function () {
         animateText.play()
@@ -120,6 +166,11 @@
       var btn2 = document.getElementById('btn2')
       btn2.addEventListener('click', function () {
         animateNumber.play()
+      }, false)
+
+      var btn3 = document.getElementById('btn3')
+      btn3.addEventListener('click', function () {
+        animateText2.play()
       }, false)
 
       var addrBtn = document.getElementById('addr')
