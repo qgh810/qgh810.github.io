@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>邱国辉前端面试题1(es5)</title>
-    <script type="text/javascript" src="human.js"></script>
+    <title>邱国辉前端面试题1</title>
+    <script type="text/javascript" src="dist/human.js"></script>
     <style>
       html, body {
         width: 100%;
@@ -70,6 +70,8 @@
 
       <div class="control-btns">
         <button class="btn confirm">运行</button>
+        <button class="btn clear-in">清空输入</button>
+        <button class="btn clear-out">清空输出</button>
       </div>
 
       <div class="title"><span>输出: </span></div>
@@ -78,12 +80,21 @@
 
     <script>
       window.onload = function () {
-        // 获取dom
         var textarea = document.querySelector('.textarea')
         var confirmBtn = document.querySelector('.confirm')
+        var clearInBtn = document.querySelector('.clear-in')
+        var clearOutBtn = document.querySelector('.clear-out')
         var output = document.querySelector('.output-container')
-        // 默认执行程序
-        var example = "Human('小明').sleep(2).eat('早餐').sleep(3).eat('午餐').sleep(4).eat('晚餐').sleepFirst(1)"
+        var example = `Human('小明').sleep(2).eat('早餐').sleep(3).eat('午餐').sleep(4).eat('晚餐').sleepFirst(1)`
+
+        // 监听清除按钮 清空输入框和输出框
+        clearInBtn.addEventListener('click', function () {
+          textarea.value = ''
+        })
+        // 监听清除按钮 清空输出
+        clearOutBtn.addEventListener('click', function () {
+          output.innerHTML = ''
+        })
 
         // 监听运行按钮 执行代码
         confirmBtn.addEventListener('click', function () {
@@ -93,8 +104,8 @@
           if (program.indexOf('Human') === 0) {
             eval(program)
           } else {
-            alert("抱歉, 只能执行Human函数, 如: "
-             + example + " , 点击确定后输入框会重新填入示例程序")
+            alert(`抱歉, 只能执行Human函数, 如: 
+            ${example}, 点击确定后输入框会重新填入示例程序`)
             textarea.value = example
           }
         })
