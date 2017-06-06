@@ -42,6 +42,7 @@
 
   // 方法: 说你好
   _Human.prototype.hi = function () {
+    // 向动作队列添加待执行方法
     this.steps.push(function (fn) {
       write('你好，' + this.name + '！')
       fn()
@@ -52,6 +53,7 @@
 
   // 方法: 睡觉
   _Human.prototype.sleep = function (s) {
+    // 向动作队列添加待执行方法
     this.steps.push(function (fn) {
       write('休息' + s + '秒..')
       setTimeout(fn, s * 1000)
@@ -62,6 +64,7 @@
 
   // 方法: 吃东西
   _Human.prototype.eat = function (food) {
+    // 向动作队列添加待执行方法
     this.steps.push(function (fn) {
       write(this.name + '吃了' + food)
       fn()
@@ -72,6 +75,7 @@
 
   // 方法: 首次休息
   _Human.prototype.sleepFirst = function (s) {
+    // 在动作队列最前面插入待执行方法
     this.steps.unshift(function (fn) {
       write('开始等待' + s + '秒..')
       setTimeout(fn, s * 1000)
