@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💕烁妮宝宝七夕节快乐💕</title>
+
+  <style>
+    html, body, .root {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .image {
+      position: relative;
+      left: 7%;
+      display: block;
+      margin: 0 auto;
+      width: 50vw;
+      height: 50vw;
+      opacity: 0;
+      transition: all ease 0.5s;
+    }
+
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 5vw;
+    }
+
+    .btns {
+      margin: 10vw auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .btn {
+      position: relative;
+      left: 0;
+      top: 0;
+      transition: all ease 0.1s;
+    }
+  </style>
+</head>
+<body>
+  <div class="root">
+    <img src="./image.gif" class="image" id="image">
+    <div class="title">老婆我爱你，你爱我吗？</div>
+    <div class="btns">
+      <button class="btn yes" id="yes">❤️爱</button>
+      <button class="btn yes" id="yes"></button>
+      <button class="btn no" id="no">🙅🏻‍♀️不爱</button>
+    </div>
+  </div>
+
+  <script>
+
+    const image = document.getElementById('image');
+    const yes = document.getElementById('yes');
+    const no = document.getElementById('no');
+
+    yes.addEventListener('click', onClickYes);
+    no.addEventListener('touchstart', onTouchstartNo);
+
+    function onClickYes() {
+      image && (image.style.opacity = '1')
+      playRain()
+    }
+
+    let lastTop = 0;
+    let lastLeft = 0;
+    function onTouchstartNo(ev) {
+      const top = createRandomNumber(0, 60);
+      const left = createRandomNumber(0, 60);
+
+      if (Math.abs(top - lastTop) < 20 && Math.abs(left - lastLeft) < 30) {
+        return onTouchstartNo(ev);
+      }
+
+      lastTop = top;
+      lastLeft = left;
+      no.style.top = top + 'vw';
+      no.style.left = '-' + left + 'vw'
+      ev.preventDefault()
+    }
+
+    function createRandomNumber(start, end) {
+      const d = end - start;
+      const randomNumber = Math.random() * d;
+      return start + randomNumber;
+    }
+
+    function playRain() {
+      const count = 30;
+      for (let i = 0; i < count; i++) {
+        new Rain('😘', {
+          left: (95 / count) * i + 'vw',
+          size: '8vw',
+          time: createRandomNumber(5, 10),
+          delay: createRandomNumber(0, 3),
+        })
+      }
+    }
+
+    class Rain {
+      constructor(content, { left, size, time, delay }) {
+        this.content = content;
+        this.left = left || '0';
+        this.size = size || '5vw';
+        this.time = time || 10
+        this.dom = document.createElement('div');
+        this.dom.innerHTML = this.content;
+        Object.assign(this.dom.style, {
+          width: this.size,
+          height: this.size,
+          position: 'fixed',
+          left: this.left,
+          bottom: '120vh',
+          transition: 'all ease ' + this.time + 's',
+          fontSize: this.size,
+        })
+        document.body.appendChild(this.dom);
+
+        setTimeout(() => {
+          this.play()
+        }, (delay || 0) * 1000)
+      }
+
+      play() {
+        this.dom.style.bottom = '-20vh'
+        setTimeout(() => {
+          this.onPlayEnd();
+        }, this.time * 1000)
+      }
+
+      onPlayEnd() {
+        this.dom.parentElement.removeChild(this.dom);
+      }
+    }
+
+  </script>
+</body>
+</html>
