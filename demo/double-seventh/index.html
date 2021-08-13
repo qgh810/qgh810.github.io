@@ -42,6 +42,8 @@
       left: 0;
       top: 0;
       transition: all ease 0.1s;
+      padding: 1vw 2vw;
+      font-size: 5vw;
     }
   </style>
 </head>
@@ -67,6 +69,7 @@
     function onClickYes() {
       image && (image.style.opacity = '1')
       playRain()
+      document.title = '我也爱你，老婆😘😘'
     }
 
     let lastTop = 0;
@@ -82,7 +85,7 @@
       lastTop = top;
       lastLeft = left;
       no.style.top = top + 'vw';
-      no.style.left = '-' + left + 'vw'
+      no.style.left = '-' + left + 'vw';
       ev.preventDefault()
     }
 
